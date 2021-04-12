@@ -87,3 +87,9 @@ gboolean hisvg_handle_set_stylesheet (HiSVGHandle* handle, const char* id, const
 void hisvg_handle_get_dimensions (HiSVGHandle* handle, HiSVGDimension** dimension)
 {
 }
+
+// TODO
+HLDomElementNode* hisvg_handle_get_node (HiSVGHandle* handle, const char* id)
+{
+    return NULL;
+}
