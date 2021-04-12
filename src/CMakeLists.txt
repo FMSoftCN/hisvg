@@ -12,7 +12,8 @@ list(APPEND hisvg_SOURCES
     hisvg-handle.c
 )
 
-include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS})
+include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS} ${HIDOMLAYOUT_INCLUDE_DIRS})
+link_directories(${HIDOMLAYOUT_LIBRARY_DIRS})
 add_library(hisvg SHARED ${hisvg_SOURCES})
-target_link_libraries(hisvg ${GLIB_LIBRARIES})
+target_link_libraries(hisvg ${GLIB_LIBRARIES}  ${HIDOMLAYOUT_LIBRARIES})
 
