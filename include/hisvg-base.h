@@ -5,6 +5,11 @@ typedef struct HiSVGHandle_ {
 
     HiSVGHandleFlags flags;
 
+    double dpi_x;
+    double dpi_y;
+
+    char* base_uri;
+
 } HiSVGHandle;
 
 #ifdef __cplusplus
