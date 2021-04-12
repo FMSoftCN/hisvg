@@ -1,0 +1,18 @@
+
+cmake_minimum_required(VERSION 3.10)
+
+project(hisvg)
+
+
+list(APPEND hisvg_INCLUDE_DIRECTORIES
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+list(APPEND hisvg_SOURCES
+    hisvg-handle.c
+)
+
+include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS})
+add_library(hisvg SHARED ${hisvg_SOURCES})
+target_link_libraries(hisvg ${GLIB_LIBRARIES})
+
