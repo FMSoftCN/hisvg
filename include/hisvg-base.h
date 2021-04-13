@@ -15,7 +15,8 @@ typedef struct HiSVGHandle_ {
     HiSVGDpi dpi;
     HiSVGLoadFlags load_flags;
 
-    char* base_uri;
+    char* base_url;
+    uint8_t is_testing;
 
 } HiSVGHandle;
 
@@ -25,6 +26,9 @@ extern "C" {
 
 void _hi_svg_set_load_flags(HiSVGLoadFlags* load_flags, HiSVGHandleFlags flags);
 HiSVGHandleFlags _hi_svg_get_load_flags(HiSVGLoadFlags* load_flags);
+
+void _hi_svg_set_testing(HiSVGHandle* handle, uint8_t testing);
+uint8_t _hi_svg_get_testing(HiSVGHandle* handle);
 
 #ifdef __cplusplus
 }

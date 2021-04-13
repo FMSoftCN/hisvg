@@ -26,6 +26,19 @@ HiSVGHandleFlags _hi_svg_get_load_flags(HiSVGLoadFlags* load_flags)
     return (load_flags->unlimited_size << 0) | (load_flags->keep_image_data << 1);
 }
 
+void _hi_svg_set_testing(HiSVGHandle* handle, uint8_t testing)
+{
+    if (handle)
+    {
+        handle->is_testing = testing;
+    }
+}
+
+uint8_t _hi_svg_get_testing(HiSVGHandle* handle)
+{
+    return handle ? handle->is_testing : 0;
+}
+
 HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags)
 {
     HiSVGHandle* handle = g_malloc0(sizeof(HiSVGHandle));
@@ -67,16 +80,16 @@ void hisvg_handle_set_base_uri (HiSVGHandle* handle, const char* base_uri)
         return;
     }
 
-    if (handle->base_uri)
+    if (handle->base_url)
     {
-        g_free(handle->base_uri);
+        g_free(handle->base_url);
     }
-    handle->base_uri = g_strdup(base_uri);
+    handle->base_url = g_strdup(base_uri);
 }
 
 const char* hisvg_handle_get_base_uri (HiSVGHandle* handle)
 {
-    return handle ? handle->base_uri : NULL;
+    return handle ? handle->base_url : NULL;
 }
 
 // TODO
