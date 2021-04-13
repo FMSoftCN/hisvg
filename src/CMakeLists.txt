@@ -10,6 +10,7 @@ list(APPEND hisvg_INCLUDE_DIRECTORIES
 
 list(APPEND hisvg_SOURCES
     hisvg-handle.c
+    hisvg-cairo.c
 )
 
 include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS} ${HIDOMLAYOUT_INCLUDE_DIRS} ${Cairo_INCLUDE_DIRS})

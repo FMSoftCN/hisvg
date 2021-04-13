@@ -4,6 +4,7 @@
 #define _HI_SVG_H_
 
 #include <glib.h>
+#include <cairo.h>
 #include "hidomlayout.h"
 
 typedef struct HiSVGHandle_ HiSVGHandle;
@@ -55,7 +56,6 @@ gboolean hisvg_handle_set_stylesheet (HiSVGHandle* handle, const char* id, const
 void hisvg_handle_get_dimensions (HiSVGHandle* handle, HiSVGDimension** dimension);
 HLDomElementNode* hisvg_handle_get_node (HiSVGHandle* handle, const char* id);
 
-#if 0
 gboolean hisvg_handle_render_cairo (HiSVGHandle* handle, cairo_t* cr, const HiSVGRect* viewport, const char* id, GError** error);
 gboolean hisvg_handle_get_geometry_for_layer (HiSVGHandle* handle,
                                     const char* id,
@@ -81,8 +81,6 @@ gboolean hisvg_handle_render_element (HiSVGHandle* handle,
                             const char* id,
                             const HiSVGRect* element_viewport,
                             GError** error);
-
-#endif
 
 #ifdef __cplusplus
 }
