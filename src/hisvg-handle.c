@@ -1,10 +1,14 @@
 
 #include "hisvg.h"
 #include "hisvg-base.h"
-#include <glib.h>
 
 #define HISVG_DEFAULT_DPI_X 90.0
 #define HISVG_DEFAULT_DPI_Y 90.0
+
+GQuark hisvg_error_quark (void)
+{
+    return g_quark_from_string ("hisvg-error-quark");
+}
 
 HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags)
 {
@@ -13,7 +17,7 @@ HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags)
     {
         return NULL;
     }
-    _hi_svg_set_load_flags(&handle->load_flags, flags);
+    _hisvg_set_load_flags(&handle->load_flags, flags);
     return handle;
 }
 

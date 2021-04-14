@@ -4,6 +4,7 @@
 #define _HI_SVG_H_
 
 #include <glib.h>
+#include <glib/gquark.h>
 #include <cairo.h>
 #include "hidomlayout.h"
 
@@ -44,6 +45,8 @@ extern "C" {
 #endif
 
 
+#define HISVG_ERROR (hisvg_error_quark ())
+GQuark hisvg_error_quark (void) G_GNUC_CONST;
 HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags);
 void hisvg_handle_destroy (HiSVGHandle* handle);
 void hisvg_handle_set_dpi (HiSVGHandle* handle, double dpi_x, double dpi_y);
