@@ -6,39 +6,6 @@
 #define HISVG_DEFAULT_DPI_X 90.0
 #define HISVG_DEFAULT_DPI_Y 90.0
 
-void _hi_svg_set_load_flags(HiSVGLoadFlags* load_flags, HiSVGHandleFlags flags)
-{
-    if (load_flags == NULL)
-    {
-        return;
-    }
-    load_flags->unlimited_size = flags & HISVG_HANDLE_FLAG_UNLIMITED;
-    load_flags->keep_image_data = flags & HISVG_HANDLE_FLAG_KEEP_IMAGE_DATA;
-}
-
-HiSVGHandleFlags _hi_svg_get_load_flags(HiSVGLoadFlags* load_flags)
-{
-    if (load_flags == NULL)
-    {
-        return HISVG_HANDLE_FLAGS_NONE;
-    }
-
-    return (load_flags->unlimited_size << 0) | (load_flags->keep_image_data << 1);
-}
-
-void _hi_svg_set_testing(HiSVGHandle* handle, uint8_t testing)
-{
-    if (handle)
-    {
-        handle->is_testing = testing;
-    }
-}
-
-uint8_t _hi_svg_get_testing(HiSVGHandle* handle)
-{
-    return handle ? handle->is_testing : 0;
-}
-
 HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags)
 {
     HiSVGHandle* handle = g_malloc0(sizeof(HiSVGHandle));
@@ -126,3 +93,4 @@ HLDomElementNode* hisvg_handle_get_node (HiSVGHandle* handle, const char* id)
 {
     return NULL;
 }
+

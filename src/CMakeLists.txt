@@ -9,6 +9,7 @@ list(APPEND hisvg_INCLUDE_DIRECTORIES
 )
 
 list(APPEND hisvg_SOURCES
+    hisvg-base.c
     hisvg-handle.c
     hisvg-cairo.c
 )

@@ -1,5 +1,7 @@
-#ifndef _HI_SVG_PRIVATE_H_
-#define _HI_SVG_PRIVATE_H_
+#ifndef _HI_SVG_BASE_H_
+#define _HI_SVG_BASE_H_
+
+#include <libxml/SAX.h>
 
 typedef struct HiSVGDpi_ {
     double x;
@@ -18,6 +20,7 @@ typedef struct HiSVGHandle_ {
     char* base_url;
     uint8_t is_testing;
 
+    xmlParserCtxtPtr ctxt;
 } HiSVGHandle;
 
 #ifdef __cplusplus
@@ -30,9 +33,18 @@ HiSVGHandleFlags _hi_svg_get_load_flags(HiSVGLoadFlags* load_flags);
 void _hi_svg_set_testing(HiSVGHandle* handle, uint8_t testing);
 uint8_t _hi_svg_get_testing(HiSVGHandle* handle);
 
+gboolean  _hisvg_handle_write (HiSVGHandle* handle, const guchar* buf,
+                                     gsize count, GError** error);
+gboolean  _hisvg_handle_close (HiSVGHandle* handle, GError** error);
+
+gboolean _hisvg_handle_fill_with_data (HiSVGHandle* handle, const char* data, 
+        gsize data_len, GError ** error);
+
+
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _HI_SVG_PRIVATE_H_
+#endif // _HI_SVG_BASE_H_
 
