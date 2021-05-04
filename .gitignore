@@ -23,6 +23,7 @@ hiacejs_test
 hiacejs_run
 node_test
 *.pc
+.build
 
 
 #log
@@ -33,4 +34,6 @@ log
 css_select_test
 css_select_test2
 test/layout_test
+tests/svg2png
+tests/*.png
 *.a

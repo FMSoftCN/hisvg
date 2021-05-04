@@ -15,7 +15,10 @@ echo ""
 echo "ROOT_DIR=$ROOT_DIR"
 echo ""
 
-cmake -DCMAKE_INSTALL_PREFIX=$ROOT_DIR/usr
+mkdir -p .build
+cd .build
+cmake -DCMAKE_INSTALL_PREFIX=$ROOT_DIR/usr ..
 #make VERBOSE=1
 make
+cd ..
 
