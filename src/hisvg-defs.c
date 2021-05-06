@@ -129,7 +129,7 @@ hisvg_defs_lookup (const HiSVGDefs * defs, const char *name)
     char *hashpos;
     hashpos = g_strrstr (name, "#");
     if (!hashpos) {
-        return NULL;
+        return g_hash_table_lookup (defs->hash, name);
     }
     if (hashpos == name) {
         return g_hash_table_lookup (defs->hash, name + 1);
