@@ -2301,9 +2301,17 @@ gboolean _hisvg_node_attribute_to_node_inner_css_properties(HiSVGHandle* handle,
     const char* inner_class_name = _hisvg_node_get_inner_class_name(handle, node);
 
     //"  key:value; "
-    size_t len = (node->inner_class_value ? strlen(node->inner_class_value) : 0) + strlen(key) + strlen(value) + 4;
+    size_t last_len = node->inner_class_value ? strlen(node->inner_class_value) : 0;
+    size_t len =  last_len + strlen(key) + strlen(value) + 4;
     node->inner_class_value = (char*)realloc(node->inner_class_value, len);
-    strcat(node->inner_class_value, key);
+    if (last_len)
+    {
+        strcat(node->inner_class_value, key);
+    }
+    else
+    {
+        strcpy(node->inner_class_value, key);
+    }
     strcat(node->inner_class_value, ":");
     strcat(node->inner_class_value, value);
     strcat(node->inner_class_value, "; ");
