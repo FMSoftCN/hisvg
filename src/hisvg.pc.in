@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libhisvg
+Description: hisvg library
+Version: 0.1
+Requires: glib-2.0 hidomlayout
+Libs: -L${libdir} -lhisvg
+Cflags: -I${includedir}

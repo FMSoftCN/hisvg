@@ -46,3 +46,7 @@ link_directories(${HIDOMLAYOUT_LIBRARY_DIRS})
 add_library(hisvg SHARED ${hisvg_SOURCES})
 target_link_libraries(hisvg ${GLIB_LIBRARIES}  ${HIDOMLAYOUT_LIBRARIES} ${HICairo_LIBRARIES} ${LIBXML2_LIBRARY})
 
+configure_file(hisvg.pc.in hisvg.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hisvg.pc DESTINATION lib/pkgconfig)
+install(FILES ${CMAKE_SOURCE_DIR}/include/hisvg.h DESTINATION include)
+install(TARGETS hisvg DESTINATION lib)
