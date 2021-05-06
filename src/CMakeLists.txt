@@ -25,7 +25,6 @@ list(APPEND hisvg_SOURCES
     hisvg-mask.c
     hisvg-paint-server.c
     hisvg-shapes.c
-    hisvg-size-callback.c
     hisvg-structure.c
     hisvg-styles.c
     hisvg-text.c
@@ -33,7 +32,6 @@ list(APPEND hisvg_SOURCES
     hisvg-path.c
     hisvg-xml.c
     hisvg-io.c
-    #    hisvg-enum-types.c
 
     hisvg-cond.c
 
