@@ -1,5 +1,3 @@
-# Copyright (C) 2020 Sony Interactive Entertainment Inc.
-#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -53,57 +51,57 @@ This will define the following variables in your project:
 #]=======================================================================]
 
 find_package(PkgConfig QUIET)
-pkg_check_modules(PC_CAIRO QUIET cairo)
-set(Cairo_COMPILE_OPTIONS ${PC_CAIRO_CFLAGS_OTHER})
-set(Cairo_VERSION ${PC_CAIRO_VERSION})
+pkg_check_modules(PC_HICAIRO QUIET hicairo)
+set(HICairo_COMPILE_OPTIONS ${PC_HICAIRO_CFLAGS_OTHER})
+set(HICairo_VERSION ${PC_HICAIRO_VERSION})
 
-find_path(Cairo_INCLUDE_DIR
+find_path(HICairo_INCLUDE_DIR
     NAMES cairo.h
-    HINTS ${PC_CAIRO_INCLUDEDIR} ${PC_CAIRO_INCLUDE_DIR}
+    HINTS ${PC_HICAIRO_INCLUDEDIR} ${PC_HICAIRO_INCLUDE_DIR}
     PATH_SUFFIXES cairo
 )
 
-find_library(Cairo_LIBRARY
-    NAMES ${Cairo_NAMES} cairo
-    HINTS ${PC_CAIRO_LIBDIR} ${PC_CAIRO_LIBRARY_DIRS}
+find_library(HICairo_LIBRARY
+    NAMES ${HICairo_NAMES} hicairo
+    HINTS ${PC_HICAIRO_LIBDIR} ${PC_HICAIRO_LIBRARY_DIRS}
 )
 
-if (Cairo_INCLUDE_DIR AND NOT Cairo_VERSION)
-    if (EXISTS "${Cairo_INCLUDE_DIR}/cairo-version.h")
-        file(READ "${Cairo_INCLUDE_DIR}/cairo-version.h" Cairo_VERSION_CONTENT)
+if (HICairo_INCLUDE_DIR AND NOT HICairo_VERSION)
+    if (EXISTS "${HICairo_INCLUDE_DIR}/cairo-version.h")
+        file(READ "${HICairo_INCLUDE_DIR}/cairo-version.h" Cairo_VERSION_CONTENT)
 
-        string(REGEX MATCH "#define +CAIRO_VERSION_MAJOR +([0-9]+)" _dummy "${Cairo_VERSION_CONTENT}")
-        set(Cairo_VERSION_MAJOR "${CMAKE_MATCH_1}")
+        string(REGEX MATCH "#define +HICAIRO_VERSION_MAJOR +([0-9]+)" _dummy "${HICairo_VERSION_CONTENT}")
+        set(HICairo_VERSION_MAJOR "${CMAKE_MATCH_1}")
 
-        string(REGEX MATCH "#define +CAIRO_VERSION_MINOR +([0-9]+)" _dummy "${Cairo_VERSION_CONTENT}")
-        set(Cairo_VERSION_MINOR "${CMAKE_MATCH_1}")
+        string(REGEX MATCH "#define +HICAIRO_VERSION_MINOR +([0-9]+)" _dummy "${HICairo_VERSION_CONTENT}")
+        set(HICairo_VERSION_MINOR "${CMAKE_MATCH_1}")
 
-        string(REGEX MATCH "#define +CAIRO_VERSION_MICRO +([0-9]+)" _dummy "${Cairo_VERSION_CONTENT}")
-        set(Cairo_VERSION_PATCH "${CMAKE_MATCH_1}")
+        string(REGEX MATCH "#define +HICAIRO_VERSION_MICRO +([0-9]+)" _dummy "${HICairo_VERSION_CONTENT}")
+        set(HICairo_VERSION_PATCH "${CMAKE_MATCH_1}")
 
-        set(Cairo_VERSION "${Cairo_VERSION_MAJOR}.${Cairo_VERSION_MINOR}.${Cairo_VERSION_PATCH}")
+        set(HICairo_VERSION "${HICairo_VERSION_MAJOR}.${HICairo_VERSION_MINOR}.${HICairo_VERSION_PATCH}")
     endif ()
 endif ()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Cairo
-    FOUND_VAR Cairo_FOUND
-    REQUIRED_VARS Cairo_LIBRARY Cairo_INCLUDE_DIR
-    VERSION_VAR Cairo_VERSION
+find_package_handle_standard_args(HiCairo
+    FOUND_VAR HiCairo_FOUND
+    REQUIRED_VARS HICairo_LIBRARY HICairo_INCLUDE_DIR
+    VERSION_VAR HICairo_VERSION
 )
 
-if (Cairo_LIBRARY AND NOT TARGET Cairo::Cairo)
+if (HICairo_LIBRARY AND NOT TARGET Cairo::Cairo)
     add_library(Cairo::Cairo UNKNOWN IMPORTED GLOBAL)
     set_target_properties(Cairo::Cairo PROPERTIES
-        IMPORTED_LOCATION "${Cairo_LIBRARY}"
-        INTERFACE_COMPILE_OPTIONS "${Cairo_COMPILE_OPTIONS}"
-        INTERFACE_INCLUDE_DIRECTORIES "${Cairo_INCLUDE_DIR}"
+        IMPORTED_LOCATION "${HICairo_LIBRARY}"
+        INTERFACE_COMPILE_OPTIONS "${HICairo_COMPILE_OPTIONS}"
+        INTERFACE_INCLUDE_DIRECTORIES "${HICairo_INCLUDE_DIR}"
     )
 endif ()
 
-mark_as_advanced(Cairo_INCLUDE_DIR Cairo_LIBRARIES)
+mark_as_advanced(HICairo_INCLUDE_DIR HICairo_LIBRARIES)
 
-if (Cairo_FOUND)
-    set(Cairo_LIBRARIES ${Cairo_LIBRARY})
-    set(Cairo_INCLUDE_DIRS ${Cairo_INCLUDE_DIR})
+if (HiCairo_FOUND)
+    set(HICairo_LIBRARIES ${HICairo_LIBRARY})
+    set(HICairo_INCLUDE_DIRS ${HICairo_INCLUDE_DIR})
 endif ()
