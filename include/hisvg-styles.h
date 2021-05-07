@@ -53,6 +53,7 @@
 #include <cairo.h>
 #include "hisvg-common.h"
 #include "hisvg-paint-server.h"
+#include <pango/pango.h>
 
 #include <libxml/SAX.h>
 

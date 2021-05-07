@@ -56,7 +56,6 @@
 
 #include <libxml/SAX.h>
 #include <libxml/xmlmemory.h>
-#include <pango/pango.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <math.h>
@@ -219,7 +218,7 @@ struct HiSVGDrawingCtx {
     HiSVGState *state;
     GError **error;
     HiSVGDefs *defs;
-    PangoContext *pango_context;
+    void* text_context;
     double dpi_x, dpi_y;
     HiSVGViewBox vb;
     GSList *vb_stack;
@@ -243,9 +242,8 @@ struct HiSVGRender {
 
     void (*free) (HiSVGRender * self);
 
-    PangoContext    *(*create_pango_context)    (HiSVGDrawingCtx * ctx);
-    void             (*render_pango_layout)	    (HiSVGDrawingCtx * ctx, PangoLayout *layout,
-                                                 double x, double y);
+    void*            (*create_text_context)     (HiSVGDrawingCtx * ctx);
+    void             (*render_text)	            (HiSVGDrawingCtx * ctx, void* layout, double x, double y);
     void             (*render_path)             (HiSVGDrawingCtx * ctx, const cairo_path_t *path);
     void             (*render_surface)          (HiSVGDrawingCtx * ctx, cairo_surface_t *surface,
                                                  double x, double y, double w, double h);

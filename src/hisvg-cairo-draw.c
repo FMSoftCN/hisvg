@@ -389,8 +389,8 @@ _set_hisvg_affine (HiSVGCairoRender * render, cairo_matrix_t *affine)
     cairo_set_matrix (cr, &matrix);
 }
 
-PangoContext *
-hisvg_cairo_create_pango_context (HiSVGDrawingCtx * ctx)
+void *
+hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx)
 {
     PangoFontMap *fontmap;
     PangoContext *context;
@@ -404,8 +404,9 @@ hisvg_cairo_create_pango_context (HiSVGDrawingCtx * ctx)
 }
 
 void
-hisvg_cairo_render_pango_layout (HiSVGDrawingCtx * ctx, PangoLayout * layout, double x, double y)
+hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 {
+    PangoLayout* layout = lyt;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
     HiSVGState *state = hisvg_current_state (ctx);
     PangoRectangle ink;

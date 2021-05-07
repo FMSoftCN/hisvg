@@ -143,8 +143,8 @@ hisvg_cairo_clip_render_new (cairo_t * cr, HiSVGCairoRender *parent)
 
     render->type = HISVG_RENDER_TYPE_CAIRO_CLIP;
     render->free = hisvg_cairo_clip_render_free;
-    render->create_pango_context = hisvg_cairo_create_pango_context;
-    render->render_pango_layout = hisvg_cairo_render_pango_layout;
+    render->create_text_context = hisvg_cairo_create_text_context;
+    render->render_text = hisvg_cairo_render_text;
     render->render_surface = hisvg_cairo_clip_render_surface;
     render->render_path = hisvg_cairo_clip_render_path;
     render->pop_discrete_layer = hisvg_cairo_clip_pop_discrete_layer;

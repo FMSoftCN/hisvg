@@ -77,8 +77,8 @@ hisvg_cairo_render_new (cairo_t * cr, double width, double height)
 
     cairo_render->super.type = HISVG_RENDER_TYPE_CAIRO;
     cairo_render->super.free = hisvg_cairo_render_free;
-    cairo_render->super.create_pango_context = hisvg_cairo_create_pango_context;
-    cairo_render->super.render_pango_layout = hisvg_cairo_render_pango_layout;
+    cairo_render->super.create_text_context = hisvg_cairo_create_text_context;
+    cairo_render->super.render_text = hisvg_cairo_render_text;
     cairo_render->super.render_surface = hisvg_cairo_render_surface;
     cairo_render->super.render_path = hisvg_cairo_render_path;
     cairo_render->super.pop_discrete_layer = hisvg_cairo_pop_discrete_layer;
@@ -184,7 +184,7 @@ HiSVGDrawingCtx *hisvg_cairo_new_drawing_ctx_with_viewport	(cairo_t * cr,
     draw->dpi_y = handle->priv->dpi_y;
     draw->vb.rect.width = data.em;
     draw->vb.rect.height = data.ex;
-    draw->pango_context = NULL;
+    draw->text_context = NULL;
     draw->drawsub_stack = NULL;
     draw->acquired_nodes = NULL;
 

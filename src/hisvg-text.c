@@ -616,12 +616,12 @@ hisvg_text_layout_new (HiSVGDrawingCtx * ctx, HiSVGState * state, const char *te
 {
     HiSVGTextLayout *layout;
 
-    if (ctx->pango_context == NULL)
-        ctx->pango_context = ctx->render->create_pango_context (ctx);
+    if (ctx->text_context == NULL)
+        ctx->text_context = ctx->render->create_text_context (ctx);
 
     layout = g_new0 (HiSVGTextLayout, 1);
 
-    layout->layout = hisvg_text_create_layout (ctx, state, text, ctx->pango_context);
+    layout->layout = hisvg_text_create_layout (ctx, state, text, (PangoContext*)ctx->text_context);
     layout->ctx = ctx;
 
     layout->anchor = state->text_anchor;
@@ -645,7 +645,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     if (state->font_size.length == 0)
         return;
 
-    context = ctx->render->create_pango_context (ctx);
+    context = ctx->render->create_text_context (ctx);
     layout = hisvg_text_create_layout (ctx, state, text, context);
     pango_layout_get_size (layout, &w, &h);
     iter = pango_layout_get_iter (layout);
@@ -659,7 +659,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
         offset_y = offset;
     }
     pango_layout_iter_free (iter);
-    ctx->render->render_pango_layout (ctx, layout, *x - offset_x, *y - offset_y);
+    ctx->render->render_text (ctx, layout, *x - offset_x, *y - offset_y);
     if (PANGO_GRAVITY_IS_VERTICAL (state->text_gravity))
         *y += w / (double)PANGO_SCALE;
     else

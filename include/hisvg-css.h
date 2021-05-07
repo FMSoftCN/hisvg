@@ -55,6 +55,8 @@
 #include "hisvg-private.h"
 #endif
 
+#include <pango/pango.h>
+
 G_BEGIN_DECLS
 
 #define HISVG_ASPECT_RATIO_NONE (0)

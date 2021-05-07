@@ -1263,8 +1263,8 @@ hisvg_drawing_ctx_free (HiSVGDrawingCtx * handle)
     g_warn_if_fail (handle->acquired_nodes == NULL);
     g_slist_free (handle->acquired_nodes);
 	
-    if (handle->pango_context != NULL)
-        g_object_unref (handle->pango_context);
+    if (handle->text_context != NULL)
+        g_object_unref (handle->text_context);
 
     g_free (handle);
 }

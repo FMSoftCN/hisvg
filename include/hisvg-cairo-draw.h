@@ -54,10 +54,9 @@
 G_BEGIN_DECLS 
 
 G_GNUC_INTERNAL
-PangoContext    *hisvg_cairo_create_pango_context    (HiSVGDrawingCtx *ctx);
+void*        hisvg_cairo_create_text_context    (HiSVGDrawingCtx *ctx);
 G_GNUC_INTERNAL
-void         hisvg_cairo_render_pango_layout	    (HiSVGDrawingCtx *ctx, PangoLayout *layout, 
-                                                 double x, double y);
+void         hisvg_cairo_render_text     	    (HiSVGDrawingCtx *ctx, void* layout, double x, double y);
 G_GNUC_INTERNAL
 void         hisvg_cairo_render_path             (HiSVGDrawingCtx *ctx, 
                                                  const cairo_path_t *path);
