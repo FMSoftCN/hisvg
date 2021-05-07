@@ -799,7 +799,7 @@ hisvg_characters_impl (HiSVGHandle * ctx, const xmlChar * ch, int len)
             type == HISVG_NODE_TYPE_TEXT) {
 
             /* find the last CHARS node in the text or tspan node, so that we
-               can coalesce the text, and thus avoid screwing up the Pango layouts */
+               can coalesce the text, and thus avoid screwing up the text layouts */
             self = NULL;
             HLDomElementNode* child = HISVG_DOM_ELEMENT_NODE_FIRST_CHILD(ctx->priv->currentnode->base);
             while(child)

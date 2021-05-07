@@ -310,7 +310,7 @@ _hisvg_node_text_draw (HiSVGNode * self, HiSVGDrawingCtx * ctx, int dominate)
         if (hisvg_current_state (ctx)->text_anchor == TEXT_ANCHOR_MIDDLE)
             length /= 2;
     }
-    if (PANGO_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
         y -= length;
         if (hisvg_current_state (ctx)->text_anchor == TEXT_ANCHOR_MIDDLE)
             dy /= 2;
@@ -363,7 +363,7 @@ _hisvg_node_text_type_tspan (HiSVGNodeText * self, HiSVGDrawingCtx * ctx,
 
     if (self->x.factor != 'n') {
         *x = _hisvg_css_normalize_length (&self->x, ctx, 'h');
-        if (!PANGO_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
+        if (!HISVG_TEXT_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
             *x -= length;
             if (hisvg_current_state (ctx)->text_anchor == TEXT_ANCHOR_MIDDLE)
                 dx /= 2;
@@ -375,7 +375,7 @@ _hisvg_node_text_type_tspan (HiSVGNodeText * self, HiSVGDrawingCtx * ctx,
 
     if (self->y.factor != 'n') {
         *y = _hisvg_css_normalize_length (&self->y, ctx, 'v');
-        if (PANGO_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
+        if (HISVG_TEXT_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity)) {
             *y -= length;
             if (hisvg_current_state (ctx)->text_anchor == TEXT_ANCHOR_MIDDLE)
                 dy /= 2;
@@ -396,7 +396,7 @@ _hisvg_node_text_length_tspan (HiSVGNodeText * self,
     if (self->x.factor != 'n' || self->y.factor != 'n')
         return TRUE;
 
-    if (PANGO_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity))
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (hisvg_current_state (ctx)->text_gravity))
         *length += _hisvg_css_normalize_length (&self->dy, ctx, 'v');
     else
         *length += _hisvg_css_normalize_length (&self->dx, ctx, 'h');
@@ -554,7 +554,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     if (state->unicode_bidi == UNICODE_BIDI_OVERRIDE || state->unicode_bidi == UNICODE_BIDI_EMBED)
         pango_context_set_base_dir (context, state->text_dir);
 
-    if (PANGO_GRAVITY_IS_VERTICAL (state->text_gravity))
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
         pango_context_set_base_gravity (context, state->text_gravity);
 
     font_desc = pango_font_description_copy (pango_context_get_font_description (context));
@@ -651,7 +651,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     iter = pango_layout_get_iter (layout);
     offset = pango_layout_iter_get_baseline (iter) / (double) PANGO_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);
-    if (PANGO_GRAVITY_IS_VERTICAL (state->text_gravity)) {
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity)) {
         offset_x = -offset;
         offset_y = 0;
     } else {
@@ -660,7 +660,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     }
     pango_layout_iter_free (iter);
     ctx->render->render_text (ctx, layout, *x - offset_x, *y - offset_y);
-    if (PANGO_GRAVITY_IS_VERTICAL (state->text_gravity))
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
         *y += w / (double)PANGO_SCALE;
     else
         *x += w / (double)PANGO_SCALE;

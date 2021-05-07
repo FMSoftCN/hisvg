@@ -142,6 +142,10 @@ typedef enum {
   HISVG_TEXT_GRAVITY_AUTO
 } HiSVGTextGravity;
 
+
+#define HISVG_TEXT_GRAVITY_IS_VERTICAL(gravity) \
+    ((gravity) == HISVG_TEXT_GRAVITY_EAST || (gravity) == HISVG_TEXT_GRAVITY_WEST)
+
 /* enums and data structures are ABI compatible with libart */
 
 typedef struct _HiSVGVpathDash HiSVGVpathDash;

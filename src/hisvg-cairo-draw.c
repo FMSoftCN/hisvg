@@ -421,7 +421,7 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
     pango_layout_get_extents (layout, &ink, NULL);
 
     hisvg_bbox_init (&bbox, &state->affine);
-    if (PANGO_GRAVITY_IS_VERTICAL (gravity)) {
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (gravity)) {
         bbox.rect.x = x + (ink.x - ink.height) / (double)PANGO_SCALE;
         bbox.rect.y = y + ink.y / (double)PANGO_SCALE;
         bbox.rect.width = ink.height / (double)PANGO_SCALE;
