@@ -142,9 +142,25 @@ typedef enum {
   HISVG_TEXT_GRAVITY_AUTO
 } HiSVGTextGravity;
 
+typedef enum {
+  HISVG_TEXT_UNDERLINE_NONE,
+  HISVG_TEXT_UNDERLINE_SINGLE,
+  HISVG_TEXT_UNDERLINE_DOUBLE,
+  HISVG_TEXT_UNDERLINE_LOW,
+  HISVG_TEXT_UNDERLINE_ERROR
+} HiSVGTextUnderline;
+
+typedef enum {
+  HISVG_TEXT_ALIGN_LEFT,
+  HISVG_TEXT_ALIGN_CENTER,
+  HISVG_TEXT_ALIGN_RIGHT
+} HiSVGTextAlignment;
+
 
 #define HISVG_TEXT_GRAVITY_IS_VERTICAL(gravity) \
     ((gravity) == HISVG_TEXT_GRAVITY_EAST || (gravity) == HISVG_TEXT_GRAVITY_WEST)
+
+#define HISVG_TEXT_SCALE 1024
 
 /* enums and data structures are ABI compatible with libart */
 

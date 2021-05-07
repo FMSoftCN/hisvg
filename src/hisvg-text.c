@@ -568,7 +568,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     pango_font_description_set_stretch (font_desc, state->font_stretch);
     pango_font_description_set_size (font_desc,
                                      _hisvg_css_normalize_font_size (state, ctx) *
-                                     PANGO_SCALE / ctx->dpi_y * 72);
+                                     HISVG_TEXT_SCALE / ctx->dpi_y * 72);
 
     layout = pango_layout_new (context);
     pango_layout_set_font_description (layout, font_desc);
@@ -576,14 +576,14 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
 
     attr_list = pango_attr_list_new ();
     attribute = pango_attr_letter_spacing_new (_hisvg_css_normalize_length (&state->letter_spacing,
-                                                                           ctx, 'h') * PANGO_SCALE);
+                                                                           ctx, 'h') * HISVG_TEXT_SCALE);
     attribute->start_index = 0;
     attribute->end_index = G_MAXINT;
     pango_attr_list_insert (attr_list, attribute); 
 
     if (state->has_font_decor && text) {
         if (state->font_decor & TEXT_UNDERLINE) {
-            attribute = pango_attr_underline_new (PANGO_UNDERLINE_SINGLE);
+            attribute = pango_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
             attribute->start_index = 0;
             attribute->end_index = -1;
             pango_attr_list_insert (attr_list, attribute);
@@ -605,7 +605,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
         pango_layout_set_text (layout, NULL, 0);
 
     pango_layout_set_alignment (layout, (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
-                                PANGO_ALIGN_LEFT : PANGO_ALIGN_RIGHT);
+                                HISVG_TEXT_ALIGN_LEFT : HISVG_TEXT_ALIGN_RIGHT);
 
     return layout;
 }
@@ -649,7 +649,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     layout = hisvg_text_create_layout (ctx, state, text, context);
     pango_layout_get_size (layout, &w, &h);
     iter = pango_layout_get_iter (layout);
-    offset = pango_layout_iter_get_baseline (iter) / (double) PANGO_SCALE;
+    offset = pango_layout_iter_get_baseline (iter) / (double) HISVG_TEXT_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity)) {
         offset_x = -offset;
@@ -661,9 +661,9 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     pango_layout_iter_free (iter);
     ctx->render->render_text (ctx, layout, *x - offset_x, *y - offset_y);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
-        *y += w / (double)PANGO_SCALE;
+        *y += w / (double)HISVG_TEXT_SCALE;
     else
-        *x += w / (double)PANGO_SCALE;
+        *x += w / (double)HISVG_TEXT_SCALE;
 
     g_object_unref (layout);
     g_object_unref (context);
@@ -676,7 +676,7 @@ hisvg_text_layout_width (HiSVGTextLayout * layout)
 
     pango_layout_get_size (layout->layout, &width, NULL);
 
-    return width / (double)PANGO_SCALE;
+    return width / (double)HISVG_TEXT_SCALE;
 }
 
 static gdouble

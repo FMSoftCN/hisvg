@@ -422,15 +422,15 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 
     hisvg_bbox_init (&bbox, &state->affine);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (gravity)) {
-        bbox.rect.x = x + (ink.x - ink.height) / (double)PANGO_SCALE;
-        bbox.rect.y = y + ink.y / (double)PANGO_SCALE;
-        bbox.rect.width = ink.height / (double)PANGO_SCALE;
-        bbox.rect.height = ink.width / (double)PANGO_SCALE;
+        bbox.rect.x = x + (ink.x - ink.height) / (double)HISVG_TEXT_SCALE;
+        bbox.rect.y = y + ink.y / (double)HISVG_TEXT_SCALE;
+        bbox.rect.width = ink.height / (double)HISVG_TEXT_SCALE;
+        bbox.rect.height = ink.width / (double)HISVG_TEXT_SCALE;
     } else {
-        bbox.rect.x = x + ink.x / (double)PANGO_SCALE;
-        bbox.rect.y = y + ink.y / (double)PANGO_SCALE;
-        bbox.rect.width = ink.width / (double)PANGO_SCALE;
-        bbox.rect.height = ink.height / (double)PANGO_SCALE;
+        bbox.rect.x = x + ink.x / (double)HISVG_TEXT_SCALE;
+        bbox.rect.y = y + ink.y / (double)HISVG_TEXT_SCALE;
+        bbox.rect.width = ink.width / (double)HISVG_TEXT_SCALE;
+        bbox.rect.height = ink.height / (double)HISVG_TEXT_SCALE;
     }
     bbox.virgin = 0;
 
