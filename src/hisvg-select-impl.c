@@ -111,13 +111,13 @@ int32_t css_select_direction (HiSVGHandle* handle, HiSVGNode* node, HiSVGState* 
     switch (svg_value->direction)
     {
         case HL_DIRECTION_LTR:
-            state->text_dir = PANGO_DIRECTION_LTR;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
             break;
         case HL_DIRECTION_RTL:
-            state->text_dir = PANGO_DIRECTION_RTL;
+            state->text_dir = HISVG_TEXT_DIRECTION_RTL;
             break;
         default:
-            state->text_dir = PANGO_DIRECTION_LTR;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
             break;
     }
     return 0;
@@ -424,36 +424,36 @@ int32_t css_select_font_stretch (HiSVGHandle* handle, HiSVGNode* node, HiSVGStat
     switch (svg_value->font_stretch)
     {
         case HL_FONT_STRETCH_INHERIT:
-            state->font_stretch = PANGO_STRETCH_NORMAL;
+            state->font_stretch = HISVG_TEXT_STRETCH_NORMAL;
             break;
         case HL_FONT_STRETCH_NORMAL:
-            state->font_stretch = PANGO_STRETCH_NORMAL;
+            state->font_stretch = HISVG_TEXT_STRETCH_NORMAL;
             break;
         case HL_FONT_STRETCH_EXPANDED:
         case HL_FONT_STRETCH_WIDER:
-            state->font_stretch = PANGO_STRETCH_EXPANDED;
+            state->font_stretch = HISVG_TEXT_STRETCH_EXPANDED;
             break;
         case HL_FONT_STRETCH_CONDENSED:
         case HL_FONT_STRETCH_NARROWER:
-            state->font_stretch = PANGO_STRETCH_CONDENSED;
+            state->font_stretch = HISVG_TEXT_STRETCH_CONDENSED;
             break;
         case HL_FONT_STRETCH_ULTRA_CONDENSED:
-            state->font_stretch = PANGO_STRETCH_ULTRA_EXPANDED;
+            state->font_stretch = HISVG_TEXT_STRETCH_ULTRA_EXPANDED;
             break;
         case HL_FONT_STRETCH_EXTRA_CONDENSED:
-            state->font_stretch = PANGO_STRETCH_EXTRA_EXPANDED;
+            state->font_stretch = HISVG_TEXT_STRETCH_EXTRA_EXPANDED;
             break;
         case HL_FONT_STRETCH_SEMI_CONDENSED:
-            state->font_stretch = PANGO_STRETCH_SEMI_CONDENSED;
+            state->font_stretch = HISVG_TEXT_STRETCH_SEMI_CONDENSED;
             break;
         case HL_FONT_STRETCH_SEMI_EXPANDED:
-            state->font_stretch = PANGO_STRETCH_SEMI_EXPANDED;
+            state->font_stretch = HISVG_TEXT_STRETCH_SEMI_EXPANDED;
             break;
         case HL_FONT_STRETCH_EXTRA_EXPANDED:
-            state->font_stretch = PANGO_STRETCH_EXTRA_CONDENSED;
+            state->font_stretch = HISVG_TEXT_STRETCH_EXTRA_CONDENSED;
             break;
         case HL_FONT_STRETCH_ULTRA_EXPANDED:
-            state->font_stretch = PANGO_STRETCH_ULTRA_CONDENSED;
+            state->font_stretch = HISVG_TEXT_STRETCH_ULTRA_CONDENSED;
             break;
     }
     return 0;
@@ -464,16 +464,16 @@ int32_t css_select_font_style (HiSVGHandle* handle, HiSVGNode* node, HiSVGState*
     switch (svg_value->font_style)
     {
         case HL_FONT_STYLE_INHERIT:
-            state->font_style = PANGO_STYLE_NORMAL;
+            state->font_style = HISVG_TEXT_STYLE_NORMAL;
             break;
         case HL_FONT_STYLE_NORMAL:
-            state->font_style = PANGO_STYLE_NORMAL;
+            state->font_style = HISVG_TEXT_STYLE_NORMAL;
             break;
         case HL_FONT_STYLE_ITALIC:
-            state->font_style = PANGO_STYLE_ITALIC;
+            state->font_style = HISVG_TEXT_STYLE_ITALIC;
             break;
         case HL_FONT_STYLE_OBLIQUE:
-            state->font_style = PANGO_STYLE_OBLIQUE;
+            state->font_style = HISVG_TEXT_STYLE_OBLIQUE;
             break;
     }
     return 0;
@@ -484,13 +484,13 @@ int32_t css_select_font_variant (HiSVGHandle* handle, HiSVGNode* node, HiSVGStat
     switch(svg_value->font_variant)
     {
         case HL_FONT_VARIANT_INHERIT:
-            state->font_variant = PANGO_VARIANT_NORMAL;
+            state->font_variant = HISVG_TEXT_VARIANT_NORMAL;
             break;
         case HL_FONT_VARIANT_NORMAL:
-            state->font_variant = PANGO_VARIANT_NORMAL;
+            state->font_variant = HISVG_TEXT_VARIANT_NORMAL;
             break;
         case HL_FONT_VARIANT_SMALL_CAPS:
-            state->font_variant = PANGO_VARIANT_SMALL_CAPS;
+            state->font_variant = HISVG_TEXT_VARIANT_SMALL_CAPS;
             break;
     }
     return 0;
@@ -501,46 +501,46 @@ int32_t css_select_font_weight (HiSVGHandle* handle, HiSVGNode* node, HiSVGState
     switch(svg_value->font_weight)
     {
         case HL_FONT_WEIGHT_INHERIT:
-            state->font_weight = PANGO_WEIGHT_NORMAL;
+            state->font_weight = HISVG_TEXT_WEIGHT_NORMAL;
             break;
         case HL_FONT_WEIGHT_NORMAL:
-            state->font_weight = PANGO_WEIGHT_NORMAL;
+            state->font_weight = HISVG_TEXT_WEIGHT_NORMAL;
             break;
         case HL_FONT_WEIGHT_BOLD:
-            state->font_weight = PANGO_WEIGHT_BOLD;
+            state->font_weight = HISVG_TEXT_WEIGHT_BOLD;
             break;
         case HL_FONT_WEIGHT_BOLDER:
-            state->font_weight = PANGO_WEIGHT_ULTRABOLD;
+            state->font_weight = HISVG_TEXT_WEIGHT_ULTRABOLD;
             break;
         case HL_FONT_WEIGHT_LIGHTER:
-            state->font_weight = PANGO_WEIGHT_LIGHT;
+            state->font_weight = HISVG_TEXT_WEIGHT_LIGHT;
             break;
         case HL_FONT_WEIGHT_100:
-            state->font_weight = (PangoWeight) 100;
+            state->font_weight = (HiSVGTextWeight) 100;
             break;
         case HL_FONT_WEIGHT_200:
-            state->font_weight = (PangoWeight) 200;
+            state->font_weight = (HiSVGTextWeight) 200;
             break;
         case HL_FONT_WEIGHT_300:
-            state->font_weight = (PangoWeight) 300;
+            state->font_weight = (HiSVGTextWeight) 300;
             break;
         case HL_FONT_WEIGHT_400:
-            state->font_weight = (PangoWeight) 400;
+            state->font_weight = (HiSVGTextWeight) 400;
             break;
         case HL_FONT_WEIGHT_500:
-            state->font_weight = (PangoWeight) 500;
+            state->font_weight = (HiSVGTextWeight) 500;
             break;
         case HL_FONT_WEIGHT_600:
-            state->font_weight = (PangoWeight) 600;
+            state->font_weight = (HiSVGTextWeight) 600;
             break;
         case HL_FONT_WEIGHT_700:
-            state->font_weight = (PangoWeight) 700;
+            state->font_weight = (HiSVGTextWeight) 700;
             break;
         case HL_FONT_WEIGHT_800:
-            state->font_weight = (PangoWeight) 800;
+            state->font_weight = (HiSVGTextWeight) 800;
             break;
         case HL_FONT_WEIGHT_900:
-            state->font_weight = (PangoWeight) 900;
+            state->font_weight = (HiSVGTextWeight) 900;
             break;
     }
     return 0;
@@ -1019,28 +1019,28 @@ int32_t css_select_writing_mode (HiSVGHandle* handle, HiSVGNode* node, HiSVGStat
     switch (svg_value->writing_mode)
     {
         case HL_WRITING_MODE_INHERIT:
-            state->text_dir = PANGO_DIRECTION_LTR;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
             state->has_text_dir = FALSE;
-            state->text_gravity = PANGO_GRAVITY_SOUTH;
+            state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
             state->has_text_gravity = FALSE;
             break;
         case HL_WRITING_MODE_HORIZONTAL_TB:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
-            state->text_dir = PANGO_DIRECTION_LTR;
-            state->text_gravity = PANGO_GRAVITY_SOUTH;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
+            state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
             break;
         case HL_WRITING_MODE_VERTICAL_RL:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
-            state->text_dir = PANGO_DIRECTION_LTR;
-            state->text_gravity = PANGO_GRAVITY_EAST;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
+            state->text_gravity = HISVG_TEXT_GRAVITY_EAST;
             break;
         case HL_WRITING_MODE_VERTICAL_LR:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
-            state->text_dir = PANGO_DIRECTION_LTR;
-            state->text_gravity = PANGO_GRAVITY_SOUTH;
+            state->text_dir = HISVG_TEXT_DIRECTION_LTR;
+            state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
             break;
     }
     return 0;

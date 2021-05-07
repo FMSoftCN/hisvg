@@ -55,7 +55,7 @@
 #include "hisvg-private.h"
 #endif
 
-#include <pango/pango.h>
+#include "hisvg-styles.h"
 
 G_BEGIN_DECLS
 
@@ -87,13 +87,13 @@ double      hisvg_css_parse_frequency    (const char *str);
 G_GNUC_INTERNAL
 double      hisvg_css_parse_time         (const char *str);
 G_GNUC_INTERNAL
-PangoStyle   hisvg_css_parse_font_style      (const char *str, gboolean * inherit);
+HiSVGTextStyle   hisvg_css_parse_font_style      (const char *str, gboolean * inherit);
 G_GNUC_INTERNAL
-PangoVariant hisvg_css_parse_font_variant    (const char *str, gboolean * inherit);
+HiSVGTextVariant hisvg_css_parse_font_variant    (const char *str, gboolean * inherit);
 G_GNUC_INTERNAL
-PangoWeight	 hisvg_css_parse_font_weight	    (const char *str, gboolean * inherit);
+HiSVGTextWeight	 hisvg_css_parse_font_weight	    (const char *str, gboolean * inherit);
 G_GNUC_INTERNAL
-PangoStretch hisvg_css_parse_font_stretch    (const char *str, gboolean * inherit);
+HiSVGTextStretch hisvg_css_parse_font_stretch    (const char *str, gboolean * inherit);
 G_GNUC_INTERNAL
 const char  *hisvg_css_parse_font_family	    (const char *str, gboolean * inherit);
 G_GNUC_INTERNAL

@@ -47,16 +47,6 @@
 #include "hisvg-common.h"
 #include "hisvg-private.h"
 #include "hisvg-css.h"
-#include "hisvg-styles.h"
-#include "hisvg-shapes.h"
-#include "hisvg-structure.h"
-#include "hisvg-image.h"
-#include "hisvg-io.h"
-#include "hisvg-text.h"
-#include "hisvg-filter.h"
-#include "hisvg-mask.h"
-#include "hisvg-marker.h"
-#include "hisvg-cairo-render.h"
 
 #define CSS_SELECT_FUNC(pname)                                           \
   int32_t css_select_##pname (HiSVGHandle* handle, HiSVGNode* node, HiSVGState* state, HLUsedSvgValues* svg_value)

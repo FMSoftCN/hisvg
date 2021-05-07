@@ -53,7 +53,6 @@
 #include <cairo.h>
 #include "hisvg-common.h"
 #include "hisvg-paint-server.h"
-#include <pango/pango.h>
 
 #include <libxml/SAX.h>
 
@@ -84,6 +83,64 @@ typedef enum {
     HISVG_ENABLE_BACKGROUND_ACCUMULATE,
     HISVG_ENABLE_BACKGROUND_NEW
 } HiSVGEnableBackgroundType;
+
+
+typedef enum {
+  HISVG_TEXT_STYLE_NORMAL,
+  HISVG_TEXT_STYLE_OBLIQUE,
+  HISVG_TEXT_STYLE_ITALIC
+} HiSVGTextStyle;
+
+typedef enum {
+  HISVG_TEXT_VARIANT_NORMAL,
+  HISVG_TEXT_VARIANT_SMALL_CAPS
+} HiSVGTextVariant;
+
+typedef enum {
+  HISVG_TEXT_WEIGHT_THIN = 100,
+  HISVG_TEXT_WEIGHT_ULTRALIGHT = 200,
+  HISVG_TEXT_WEIGHT_LIGHT = 300,
+  HISVG_TEXT_WEIGHT_SEMILIGHT = 350,
+  HISVG_TEXT_WEIGHT_BOOK = 380,
+  HISVG_TEXT_WEIGHT_NORMAL = 400,
+  HISVG_TEXT_WEIGHT_MEDIUM = 500,
+  HISVG_TEXT_WEIGHT_SEMIBOLD = 600,
+  HISVG_TEXT_WEIGHT_BOLD = 700,
+  HISVG_TEXT_WEIGHT_ULTRABOLD = 800,
+  HISVG_TEXT_WEIGHT_HEAVY = 900,
+  HISVG_TEXT_WEIGHT_ULTRAHEAVY = 1000
+} HiSVGTextWeight;
+
+
+typedef enum {
+  HISVG_TEXT_STRETCH_ULTRA_CONDENSED,
+  HISVG_TEXT_STRETCH_EXTRA_CONDENSED,
+  HISVG_TEXT_STRETCH_CONDENSED,
+  HISVG_TEXT_STRETCH_SEMI_CONDENSED,
+  HISVG_TEXT_STRETCH_NORMAL,
+  HISVG_TEXT_STRETCH_SEMI_EXPANDED,
+  HISVG_TEXT_STRETCH_EXPANDED,
+  HISVG_TEXT_STRETCH_EXTRA_EXPANDED,
+  HISVG_TEXT_STRETCH_ULTRA_EXPANDED
+} HiSVGTextStretch;
+
+typedef enum {
+  HISVG_TEXT_DIRECTION_LTR,
+  HISVG_TEXT_DIRECTION_RTL,
+  HISVG_TEXT_DIRECTION_TTB_LTR,
+  HISVG_TEXT_DIRECTION_TTB_RTL,
+  HISVG_TEXT_DIRECTION_WEAK_LTR,
+  HISVG_TEXT_DIRECTION_WEAK_RTL,
+  HISVG_TEXT_DIRECTION_NEUTRAL
+} HiSVGTextDirection;
+
+typedef enum {
+  HISVG_TEXT_GRAVITY_SOUTH,
+  HISVG_TEXT_GRAVITY_EAST,
+  HISVG_TEXT_GRAVITY_NORTH,
+  HISVG_TEXT_GRAVITY_WEST,
+  HISVG_TEXT_GRAVITY_AUTO
+} HiSVGTextGravity;
 
 /* enums and data structures are ABI compatible with libart */
 
@@ -141,19 +198,19 @@ struct _HiSVGState {
     gboolean has_font_family;
     char *lang;
     gboolean has_lang;
-    PangoStyle font_style;
+    HiSVGTextStyle font_style;
     gboolean has_font_style;
-    PangoVariant font_variant;
+    HiSVGTextVariant font_variant;
     gboolean has_font_variant;
-    PangoWeight font_weight;
+    HiSVGTextWeight font_weight;
     gboolean has_font_weight;
-    PangoStretch font_stretch;
+    HiSVGTextStretch font_stretch;
     gboolean has_font_stretch;
     TextDecoration font_decor;
     gboolean has_font_decor;
-    PangoDirection text_dir;
+    HiSVGTextDirection text_dir;
     gboolean has_text_dir;
-    PangoGravity text_gravity;
+    HiSVGTextGravity text_gravity;
     gboolean has_text_gravity;
     UnicodeBidi unicode_bidi;
     gboolean has_unicode_bidi;

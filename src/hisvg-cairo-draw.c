@@ -411,7 +411,7 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
     HiSVGState *state = hisvg_current_state (ctx);
     PangoRectangle ink;
     HiSVGBbox bbox;
-    PangoGravity gravity = pango_context_get_gravity (pango_layout_get_context (layout));
+    HiSVGTextGravity gravity = pango_context_get_gravity (pango_layout_get_context (layout));
     double rotation;
 
     cairo_set_antialias (render->cr, state->text_rendering_type);

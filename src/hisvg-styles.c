@@ -162,12 +162,12 @@ hisvg_state_init (HiSVGState * state)
 
     state->font_family = g_strdup (HISVG_DEFAULT_FONT);
     state->font_size = _hisvg_css_parse_length ("12.0");
-    state->font_style = PANGO_STYLE_NORMAL;
-    state->font_variant = PANGO_VARIANT_NORMAL;
-    state->font_weight = PANGO_WEIGHT_NORMAL;
-    state->font_stretch = PANGO_STRETCH_NORMAL;
-    state->text_dir = PANGO_DIRECTION_LTR;
-    state->text_gravity = PANGO_GRAVITY_SOUTH;
+    state->font_style = HISVG_TEXT_STYLE_NORMAL;
+    state->font_variant = HISVG_TEXT_VARIANT_NORMAL;
+    state->font_weight = HISVG_TEXT_WEIGHT_NORMAL;
+    state->font_stretch = HISVG_TEXT_STRETCH_NORMAL;
+    state->text_dir = HISVG_TEXT_DIRECTION_LTR;
+    state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
     state->unicode_bidi = UNICODE_BIDI_NORMAL;
     state->text_anchor = TEXT_ANCHOR_START;
     state->letter_spacing = _hisvg_css_parse_length ("0.0");

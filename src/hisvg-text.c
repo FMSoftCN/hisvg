@@ -604,7 +604,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     else
         pango_layout_set_text (layout, NULL, 0);
 
-    pango_layout_set_alignment (layout, (state->text_dir == PANGO_DIRECTION_LTR) ?
+    pango_layout_set_alignment (layout, (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
                                 PANGO_ALIGN_LEFT : PANGO_ALIGN_RIGHT);
 
     return layout;

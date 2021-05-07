@@ -551,112 +551,112 @@ hisvg_css_parse_time (const char *str)
     return ms;
 }
 
-PangoStyle
+HiSVGTextStyle
 hisvg_css_parse_font_style (const char *str, gboolean * inherit)
 {
     SETINHERIT ();
 
     if (str) {
         if (!strcmp (str, "oblique"))
-            return PANGO_STYLE_OBLIQUE;
+            return HISVG_TEXT_STYLE_OBLIQUE;
         if (!strcmp (str, "italic"))
-            return PANGO_STYLE_ITALIC;
+            return HISVG_TEXT_STYLE_ITALIC;
         if (!strcmp (str, "normal"))
-            return PANGO_STYLE_NORMAL;
+            return HISVG_TEXT_STYLE_NORMAL;
         if (!strcmp (str, "inherit")) {
             UNSETINHERIT ();
-            return PANGO_STYLE_NORMAL;
+            return HISVG_TEXT_STYLE_NORMAL;
         }
     }
     UNSETINHERIT ();
-    return PANGO_STYLE_NORMAL;
+    return HISVG_TEXT_STYLE_NORMAL;
 }
 
-PangoVariant
+HiSVGTextVariant
 hisvg_css_parse_font_variant (const char *str, gboolean * inherit)
 {
     SETINHERIT ();
 
     if (str) {
         if (!strcmp (str, "small-caps"))
-            return PANGO_VARIANT_SMALL_CAPS;
+            return HISVG_TEXT_VARIANT_SMALL_CAPS;
         else if (!strcmp (str, "inherit")) {
             UNSETINHERIT ();
-            return PANGO_VARIANT_NORMAL;
+            return HISVG_TEXT_VARIANT_NORMAL;
         }
     }
     UNSETINHERIT ();
-    return PANGO_VARIANT_NORMAL;
+    return HISVG_TEXT_VARIANT_NORMAL;
 }
 
-PangoWeight
+HiSVGTextWeight
 hisvg_css_parse_font_weight (const char *str, gboolean * inherit)
 {
     SETINHERIT ();
     if (str) {
         if (!strcmp (str, "lighter"))
-            return PANGO_WEIGHT_LIGHT;
+            return HISVG_TEXT_WEIGHT_LIGHT;
         else if (!strcmp (str, "bold"))
-            return PANGO_WEIGHT_BOLD;
+            return HISVG_TEXT_WEIGHT_BOLD;
         else if (!strcmp (str, "bolder"))
-            return PANGO_WEIGHT_ULTRABOLD;
+            return HISVG_TEXT_WEIGHT_ULTRABOLD;
         else if (!strcmp (str, "100"))
-            return (PangoWeight) 100;
+            return (HiSVGTextWeight) 100;
         else if (!strcmp (str, "200"))
-            return (PangoWeight) 200;
+            return (HiSVGTextWeight) 200;
         else if (!strcmp (str, "300"))
-            return (PangoWeight) 300;
+            return (HiSVGTextWeight) 300;
         else if (!strcmp (str, "400"))
-            return (PangoWeight) 400;
+            return (HiSVGTextWeight) 400;
         else if (!strcmp (str, "500"))
-            return (PangoWeight) 500;
+            return (HiSVGTextWeight) 500;
         else if (!strcmp (str, "600"))
-            return (PangoWeight) 600;
+            return (HiSVGTextWeight) 600;
         else if (!strcmp (str, "700"))
-            return (PangoWeight) 700;
+            return (HiSVGTextWeight) 700;
         else if (!strcmp (str, "800"))
-            return (PangoWeight) 800;
+            return (HiSVGTextWeight) 800;
         else if (!strcmp (str, "900"))
-            return (PangoWeight) 900;
+            return (HiSVGTextWeight) 900;
         else if (!strcmp (str, "inherit")) {
             UNSETINHERIT ();
-            return PANGO_WEIGHT_NORMAL;
+            return HISVG_TEXT_WEIGHT_NORMAL;
         }
     }
 
     UNSETINHERIT ();
-    return PANGO_WEIGHT_NORMAL;
+    return HISVG_TEXT_WEIGHT_NORMAL;
 }
 
-PangoStretch
+HiSVGTextStretch
 hisvg_css_parse_font_stretch (const char *str, gboolean * inherit)
 {
     SETINHERIT ();
 
     if (str) {
         if (!strcmp (str, "ultra-condensed"))
-            return PANGO_STRETCH_ULTRA_CONDENSED;
+            return HISVG_TEXT_STRETCH_ULTRA_CONDENSED;
         else if (!strcmp (str, "extra-condensed"))
-            return PANGO_STRETCH_EXTRA_CONDENSED;
+            return HISVG_TEXT_STRETCH_EXTRA_CONDENSED;
         else if (!strcmp (str, "condensed") || !strcmp (str, "narrower"))       /* narrower not quite correct */
-            return PANGO_STRETCH_CONDENSED;
+            return HISVG_TEXT_STRETCH_CONDENSED;
         else if (!strcmp (str, "semi-condensed"))
-            return PANGO_STRETCH_SEMI_CONDENSED;
+            return HISVG_TEXT_STRETCH_SEMI_CONDENSED;
         else if (!strcmp (str, "semi-expanded"))
-            return PANGO_STRETCH_SEMI_EXPANDED;
+            return HISVG_TEXT_STRETCH_SEMI_EXPANDED;
         else if (!strcmp (str, "expanded") || !strcmp (str, "wider"))   /* wider not quite correct */
-            return PANGO_STRETCH_EXPANDED;
+            return HISVG_TEXT_STRETCH_EXPANDED;
         else if (!strcmp (str, "extra-expanded"))
-            return PANGO_STRETCH_EXTRA_EXPANDED;
+            return HISVG_TEXT_STRETCH_EXTRA_EXPANDED;
         else if (!strcmp (str, "ultra-expanded"))
-            return PANGO_STRETCH_ULTRA_EXPANDED;
+            return HISVG_TEXT_STRETCH_ULTRA_EXPANDED;
         else if (!strcmp (str, "inherit")) {
             UNSETINHERIT ();
-            return PANGO_STRETCH_NORMAL;
+            return HISVG_TEXT_STRETCH_NORMAL;
         }
     }
     UNSETINHERIT ();
-    return PANGO_STRETCH_NORMAL;
+    return HISVG_TEXT_STRETCH_NORMAL;
 }
 
 const char *
