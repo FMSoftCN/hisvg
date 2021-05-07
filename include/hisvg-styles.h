@@ -55,7 +55,6 @@
 #include "hisvg-paint-server.h"
 
 #include <libxml/SAX.h>
-#include <pango/pango.h>
 
 G_BEGIN_DECLS 
 

@@ -52,7 +52,6 @@
 #include <glib.h>
 
 #ifdef HISVG_COMPILATION
-#include <pango/pango.h>
 #include "hisvg-private.h"
 #endif
 
