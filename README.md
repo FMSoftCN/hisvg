@@ -15,9 +15,9 @@ hiSVG is a  high performance SVG rendering library.
 hiSVG depends on the following libraries:
 
 - [GLib](https://developer.gnome.org/glib/stable/)
-- [cairo](https://www.cairographics.org/)
 - [libXML2](http://www.xmlsoft.org/)
 - [pango](https://pango.gnome.org/)
+- [hiCairo](https://gitlab.fmsoft.cn/hybridos/hicairo/)
 - [hiDomLayout](https://gitlab.fmsoft.cn/hybridos/hidomlayout/)
 
 
