@@ -405,9 +405,6 @@ int32_t css_select_font_size (HiSVGHandle* handle, HiSVGNode* node, HiSVGState* 
                 case HL_UNIT_IN:
                     out.factor = 'i';
                     break;
-                case HL_UNIT_PT:
-                    out.factor = 'i';
-                    break;
                 default:
                     out.factor = '\0';
                     break;
