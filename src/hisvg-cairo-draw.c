@@ -15,6 +15,9 @@
     This file is part of hiSVG. hiSVG is a  high performance SVG
     rendering library.
 
+    Copyright (C) 2005 Dom Lachowicz <cinamod@hotmail.com>
+    Copyright (C) 2005 Caleb Moore <c.moore@student.unsw.edu.au>
+    Copyright (C) 2005 Red Hat, Inc.
     Copyright (C) 2021 Beijing FMSoft Technologies Co., Ltd.
 
     This program is free software: you can redistribute it and/or modify
