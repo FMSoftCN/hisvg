@@ -60,7 +60,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <pango/pangocairo.h>
+#include "hisvg-text-helper.h"
 
 static const cairo_user_data_key_t surface_pixel_data_key;
 
@@ -392,33 +392,33 @@ _set_hisvg_affine (HiSVGCairoRender * render, cairo_matrix_t *affine)
 void *
 hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx)
 {
-    PangoFontMap *fontmap;
-    PangoContext *context;
+    HiSVGFontMap *fontmap;
+    HiSVGTextContext *context;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
 
-    fontmap = pango_cairo_font_map_get_default ();
-    context = pango_font_map_create_context (fontmap);
-    pango_cairo_update_context (render->cr, context);
-    pango_cairo_context_set_resolution (context, ctx->dpi_y);
+    fontmap = hisvg_font_map_get_default ();
+    context = hisvg_create_text_context (fontmap);
+    hisvg_cairo_update_text_context (render->cr, context);
+    hisvg_text_context_set_resolution (context, ctx->dpi_y);
     return context;
 }
 
 void
 hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 {
-    PangoLayout* layout = lyt;
+    HiSVGTextContextLayout* layout = lyt;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
     HiSVGState *state = hisvg_current_state (ctx);
-    PangoRectangle ink;
+    HiSVGTextRectangle ink;
     HiSVGBbox bbox;
-    HiSVGTextGravity gravity = pango_context_get_gravity (pango_layout_get_context (layout));
+    HiSVGTextGravity gravity = hisvg_text_context_get_gravity (hisvg_text_layout_get_context (layout));
     double rotation;
 
     cairo_set_antialias (render->cr, state->text_rendering_type);
 
     _set_hisvg_affine (render, &state->affine);
 
-    pango_layout_get_extents (layout, &ink, NULL);
+    hisvg_text_context_layout_get_extents (layout, &ink, NULL);
 
     hisvg_bbox_init (&bbox, &state->affine);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (gravity)) {
@@ -434,7 +434,7 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
     }
     bbox.virgin = 0;
 
-    rotation = pango_gravity_to_rotation (gravity);
+    rotation = hisvg_text_gravity_to_rotation (gravity);
     if (state->fill) {
         cairo_save (render->cr);
         cairo_move_to (render->cr, x, y);
@@ -446,7 +446,7 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
                                        bbox, hisvg_current_state (ctx)->current_color);
         if (rotation != 0.)
             cairo_rotate (render->cr, -rotation);
-        pango_cairo_show_layout (render->cr, layout);
+        hisvg_cairo_show_layout (render->cr, layout);
         cairo_restore (render->cr);
     }
 
@@ -463,7 +463,7 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 
         if (rotation != 0.)
             cairo_rotate (render->cr, -rotation);
-        pango_cairo_layout_path (render->cr, layout);
+        hisvg_cairo_layout_path (render->cr, layout);
 
         cairo_set_line_width (render->cr, _hisvg_css_normalize_length (&state->stroke_width, ctx, 'h'));
         cairo_set_miter_limit (render->cr, state->miter_limit);

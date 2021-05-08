@@ -37,6 +37,7 @@ list(APPEND hisvg_SOURCES
 
     hisvg-select.c
     hisvg-select-impl.c
+    hisvg-text-helper.c
 )
 
 include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS} ${HIDOMLAYOUT_INCLUDE_DIRS} 
