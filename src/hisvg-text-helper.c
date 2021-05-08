@@ -73,6 +73,141 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
     return pango_context_get_gravity (context);
 }
 
+void hisvg_text_context_set_language (HiSVGTextContext* context, HiSVGTextLanguage* language)
+{
+    pango_context_set_language (context, language);
+}
+
+void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction)
+{
+    pango_context_set_base_dir(context, direction);
+}
+
+void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity)
+{
+    pango_context_set_base_gravity (context, gravity);
+}
+
+HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context)
+{
+    return pango_layout_new (context);
+}
+
+HiSVGTextContextLayoutIter* hisvg_text_context_layout_get_iter (HiSVGTextContextLayout* layout)
+{
+    return pango_layout_get_iter (layout);
+}
+
+void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
+{
+    pango_layout_get_size (layout, width, height);
+}
+
+void hisvg_text_context_layout_iter_free (HiSVGTextContextLayoutIter* iter)
+{
+    pango_layout_iter_free (iter);
+}
+
+int hisvg_text_context_layout_iter_get_baseline (HiSVGTextContextLayoutIter* iter)
+{
+    return pango_layout_iter_get_baseline (iter);
+}
+
+void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment)
+{
+    return pango_layout_set_alignment (layout, alignment);
+}
+
+void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs)
+{
+    return pango_layout_set_attributes (layout, attrs);
+}
+
+void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length)
+{
+    return pango_layout_set_text (layout, text, length);
+}
+
+void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc)
+{
+    pango_layout_set_font_description (layout, desc);
+}
+
+HiSVGFontDescription* hisvg_text_context_get_font_description (HiSVGTextContext* context)
+{
+    return pango_context_get_font_description(context);
+}
+
+HiSVGFontDescription* hisvg_font_description_copy (const HiSVGFontDescription* desc)
+{
+    return pango_font_description_copy(desc);
+}
+
+void hisvg_font_description_set_family_static (HiSVGFontDescription* desc,  const char* family)
+{
+    pango_font_description_set_family_static (desc, family);
+}
+
+void hisvg_font_description_set_style (HiSVGFontDescription* desc, HiSVGTextStyle style)
+{
+    pango_font_description_set_style (desc, style);
+}
+
+void hisvg_font_description_set_variant (HiSVGFontDescription* desc, HiSVGTextVariant variant)
+{
+    pango_font_description_set_variant (desc, variant);
+}
+
+void hisvg_font_description_set_weight (HiSVGFontDescription* desc, HiSVGTextWeight weight)
+{
+    pango_font_description_set_weight (desc, weight);
+}
+
+void hisvg_font_description_set_stretch (HiSVGFontDescription* desc, HiSVGTextStretch stretch)
+{
+    pango_font_description_set_stretch (desc, stretch);
+}
+
+void hisvg_font_description_set_size (HiSVGFontDescription* desc, gint size)
+{
+    pango_font_description_set_size (desc, size);
+}
+
+void hisvg_font_description_free (HiSVGFontDescription* desc)
+{
+    pango_font_description_free (desc);
+}
+
+HiSVGTextAttrList*  hisvg_text_attr_list_new (void)
+{
+    return pango_attr_list_new();
+}
+
+void hisvg_text_attr_list_unref (HiSVGTextAttrList* list)
+{
+    pango_attr_list_unref (list);
+}
+
+void hisvg_text_attr_list_insert (HiSVGTextAttrList* list, PangoAttribute* attr)
+{
+    pango_attr_list_insert (list, attr);
+}
+
+HiSVGTextAttribute* hisvg_text_attr_strikethrough_new (gboolean strikethrough)
+{
+    return pango_attr_strikethrough_new (strikethrough);
+}
+
+HiSVGTextAttribute* hisvg_text_attr_underline_new (PangoUnderline underline)
+{
+    return pango_attr_underline_new (underline);
+}
+
+HiSVGTextAttribute* hisvg_text_attr_letter_spacing_new (int letter_spacing)
+{
+    return pango_attr_letter_spacing_new (letter_spacing);
+}
+
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)
 {
     return pango_layout_get_context(layout);
@@ -86,6 +221,11 @@ void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSV
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
 {
     return pango_gravity_to_rotation (gravity);
+}
+
+HiSVGTextLanguage* hisvg_text_language_from_string (const char *language)
+{
+    return pango_language_from_string(language);
 }
 
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)

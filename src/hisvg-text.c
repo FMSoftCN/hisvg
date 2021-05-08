@@ -57,8 +57,6 @@
 #include "hisvg-shapes.h"
 
 /* what we use for text rendering depends on what cairo has to offer */
-#include <pango/pangocairo.h>
-
 typedef struct _HiSVGNodeText HiSVGNodeText;
 
 struct _HiSVGNodeText {
@@ -526,7 +524,7 @@ hisvg_new_tref (const char* name)
 typedef struct _HiSVGTextLayout HiSVGTextLayout;
 
 struct _HiSVGTextLayout {
-    PangoLayout *layout;
+    HiSVGTextContextLayout *layout;
     HiSVGDrawingCtx *ctx;
     TextAnchor anchor;
     gdouble x, y;
@@ -539,72 +537,72 @@ hisvg_text_layout_free (HiSVGTextLayout * layout)
     g_free (layout);
 }
 
-static PangoLayout *
+static HiSVGTextContextLayout *
 hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
-                         HiSVGState * state, const char *text, PangoContext * context)
+                         HiSVGState * state, const char *text, HiSVGTextContext * context)
 {
-    PangoFontDescription *font_desc;
-    PangoLayout *layout;
-    PangoAttrList *attr_list;
-    PangoAttribute *attribute;
+    HiSVGFontDescription *font_desc;
+    HiSVGTextContextLayout *layout;
+    HiSVGTextAttrList *attr_list;
+    HiSVGTextAttribute *attribute;
 
     if (state->lang)
-        pango_context_set_language (context, pango_language_from_string (state->lang));
+        hisvg_text_context_set_language (context, hisvg_text_language_from_string (state->lang));
 
     if (state->unicode_bidi == UNICODE_BIDI_OVERRIDE || state->unicode_bidi == UNICODE_BIDI_EMBED)
-        pango_context_set_base_dir (context, state->text_dir);
+        hisvg_text_context_set_base_dir (context, state->text_dir);
 
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
-        pango_context_set_base_gravity (context, state->text_gravity);
+        hisvg_text_context_set_base_gravity (context, state->text_gravity);
 
-    font_desc = pango_font_description_copy (pango_context_get_font_description (context));
+    font_desc = hisvg_font_description_copy (hisvg_text_context_get_font_description (context));
 
     if (state->font_family)
-        pango_font_description_set_family_static (font_desc, state->font_family);
+        hisvg_font_description_set_family_static (font_desc, state->font_family);
 
-    pango_font_description_set_style (font_desc, state->font_style);
-    pango_font_description_set_variant (font_desc, state->font_variant);
-    pango_font_description_set_weight (font_desc, state->font_weight);
-    pango_font_description_set_stretch (font_desc, state->font_stretch);
-    pango_font_description_set_size (font_desc,
+    hisvg_font_description_set_style (font_desc, state->font_style);
+    hisvg_font_description_set_variant (font_desc, state->font_variant);
+    hisvg_font_description_set_weight (font_desc, state->font_weight);
+    hisvg_font_description_set_stretch (font_desc, state->font_stretch);
+    hisvg_font_description_set_size (font_desc,
                                      _hisvg_css_normalize_font_size (state, ctx) *
                                      HISVG_TEXT_SCALE / ctx->dpi_y * 72);
 
-    layout = pango_layout_new (context);
-    pango_layout_set_font_description (layout, font_desc);
-    pango_font_description_free (font_desc);
+    layout = hisvg_text_context_layout_new (context);
+    hisvg_text_context_layout_set_font_description (layout, font_desc);
+    hisvg_font_description_free (font_desc);
 
-    attr_list = pango_attr_list_new ();
-    attribute = pango_attr_letter_spacing_new (_hisvg_css_normalize_length (&state->letter_spacing,
+    attr_list = hisvg_text_attr_list_new ();
+    attribute = hisvg_text_attr_letter_spacing_new (_hisvg_css_normalize_length (&state->letter_spacing,
                                                                            ctx, 'h') * HISVG_TEXT_SCALE);
     attribute->start_index = 0;
     attribute->end_index = G_MAXINT;
-    pango_attr_list_insert (attr_list, attribute); 
+    hisvg_text_attr_list_insert (attr_list, attribute); 
 
     if (state->has_font_decor && text) {
         if (state->font_decor & TEXT_UNDERLINE) {
-            attribute = pango_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
+            attribute = hisvg_text_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
             attribute->start_index = 0;
             attribute->end_index = -1;
-            pango_attr_list_insert (attr_list, attribute);
+            hisvg_text_attr_list_insert (attr_list, attribute);
         }
 	if (state->font_decor & TEXT_STRIKE) {
-            attribute = pango_attr_strikethrough_new (TRUE);
+            attribute = hisvg_text_attr_strikethrough_new (TRUE);
             attribute->start_index = 0;
             attribute->end_index = -1;
-            pango_attr_list_insert (attr_list, attribute);
+            hisvg_text_attr_list_insert (attr_list, attribute);
 	}
     }
 
-    pango_layout_set_attributes (layout, attr_list);
-    pango_attr_list_unref (attr_list);
+    hisvg_text_context_layout_set_attributes (layout, attr_list);
+    hisvg_text_attr_list_unref (attr_list);
 
     if (text)
-        pango_layout_set_text (layout, text, -1);
+        hisvg_text_context_layout_set_text (layout, text, -1);
     else
-        pango_layout_set_text (layout, NULL, 0);
+        hisvg_text_context_layout_set_text (layout, NULL, 0);
 
-    pango_layout_set_alignment (layout, (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
+    hisvg_text_context_layout_set_alignment (layout, (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
                                 HISVG_TEXT_ALIGN_LEFT : HISVG_TEXT_ALIGN_RIGHT);
 
     return layout;
@@ -621,7 +619,7 @@ hisvg_text_layout_new (HiSVGDrawingCtx * ctx, HiSVGState * state, const char *te
 
     layout = g_new0 (HiSVGTextLayout, 1);
 
-    layout->layout = hisvg_text_create_layout (ctx, state, text, (PangoContext*)ctx->text_context);
+    layout->layout = hisvg_text_create_layout (ctx, state, text, (HiSVGTextContext*)ctx->text_context);
     layout->ctx = ctx;
 
     layout->anchor = state->text_anchor;
@@ -632,9 +630,9 @@ hisvg_text_layout_new (HiSVGDrawingCtx * ctx, HiSVGState * state, const char *te
 void
 hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gdouble * y)
 {
-    PangoContext *context;
-    PangoLayout *layout;
-    PangoLayoutIter *iter;
+    HiSVGTextContext *context;
+    HiSVGTextContextLayout *layout;
+    HiSVGTextContextLayoutIter *iter;
     HiSVGState *state;
     gint w, h;
     double offset_x, offset_y, offset;
@@ -647,9 +645,9 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
 
     context = ctx->render->create_text_context (ctx);
     layout = hisvg_text_create_layout (ctx, state, text, context);
-    pango_layout_get_size (layout, &w, &h);
-    iter = pango_layout_get_iter (layout);
-    offset = pango_layout_iter_get_baseline (iter) / (double) HISVG_TEXT_SCALE;
+    hisvg_text_context_layout_get_size (layout, &w, &h);
+    iter = hisvg_text_context_layout_get_iter (layout);
+    offset = hisvg_text_context_layout_iter_get_baseline (iter) / (double) HISVG_TEXT_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity)) {
         offset_x = -offset;
@@ -658,7 +656,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
         offset_x = 0;
         offset_y = offset;
     }
-    pango_layout_iter_free (iter);
+    hisvg_text_context_layout_iter_free (iter);
     ctx->render->render_text (ctx, layout, *x - offset_x, *y - offset_y);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
         *y += w / (double)HISVG_TEXT_SCALE;
@@ -674,7 +672,7 @@ hisvg_text_layout_width (HiSVGTextLayout * layout)
 {
     gint width;
 
-    pango_layout_get_size (layout->layout, &width, NULL);
+    hisvg_text_context_layout_get_size (layout->layout, &width, NULL);
 
     return width / (double)HISVG_TEXT_SCALE;
 }
