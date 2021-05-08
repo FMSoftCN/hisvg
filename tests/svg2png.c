@@ -23,8 +23,11 @@ int main (int argc, char* argv[])
     GError *error = NULL;
     HiSVGHandle* svg = hisvg_handle_new_from_file (argv[1], &error);
 
-    char* id="#pp";
+    char id[100] = "#pp";
     HLDomElementNode* element = hisvg_handle_get_node(svg, id);
+    fprintf(stderr, ".................find id=%s|element=%p\n", id, element);
+    strcpy(id, "pp");
+    element = hisvg_handle_get_node(svg, id);
     fprintf(stderr, ".................find id=%s|element=%p\n", id, element);
 
     char* css = "svg { color:blue !important; }";
@@ -41,7 +44,7 @@ int main (int argc, char* argv[])
     fprintf(stderr, "dimensions factor w=%c|h=%c\n", hidim.w.factor, hidim.h.factor);
 
 //    cairo_surface_t* surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, dimensions.width, dimensions.height);
-    cairo_surface_t* surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 100, 100);
+    cairo_surface_t* surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 200, 200);
     cairo_t* cr = cairo_create (surface);
 
 #if 0
@@ -50,7 +53,8 @@ int main (int argc, char* argv[])
 #endif
 
     HiSVGRect rect = {0, 0, 100, 100};
-    hisvg_handle_render_cairo (svg, cr, &rect,  NULL, NULL);
+    //hisvg_handle_render_cairo (svg, cr, &rect,  NULL, NULL);
+    hisvg_handle_render_cairo (svg, cr, NULL,  NULL, NULL);
     cairo_surface_write_to_png (surface, png_name);
 
     cairo_surface_destroy (surface);
