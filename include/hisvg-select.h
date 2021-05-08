@@ -44,6 +44,10 @@
 
  \endverbatim
  */
+
+#ifndef _HI_SVG_SELECT_H_
+#define _HI_SVG_SELECT_H_
+
 #include "hisvg-common.h"
 #include "hisvg-private.h"
 #include "hisvg-css.h"
@@ -151,3 +155,5 @@ CSS_SELECT_FUNC(unicode_bidi);
 CSS_SELECT_FUNC(letter_spacing);
 CSS_SELECT_FUNC(visibility);
 CSS_SELECT_FUNC(writing_mode);
+
+#endif // _HI_SVG_SELECT_H_
