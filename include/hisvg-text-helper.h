@@ -162,6 +162,7 @@ HiSVGFontMap* hisvg_font_map_get_default ();
 HiSVGTextContext* hisvg_create_text_context (HiSVGFontMap* fontmap);
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
+HiSVGTextLanguage* hisvg_text_language_from_string (const char *language);
 void hisvg_text_context_set_language (HiSVGTextContext* context, HiSVGTextLanguage* language);
 void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction);
 void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity);
@@ -197,8 +198,6 @@ HiSVGTextAttribute* hisvg_text_attr_letter_spacing_new (int letter_spacing);
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect);
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity);
-
-HiSVGTextLanguage* hisvg_text_language_from_string (const char *language);
 
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context);
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout);
