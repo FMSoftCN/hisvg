@@ -50,31 +50,22 @@
 
 #define HISVG_DEFAULT_FONT_FAMILY "serif"
 
-HiSVGTextContext* hisvg_create_text_context ()
+HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity)
 {
     HiSVGTextContext* ctx = (HiSVGTextContext*) calloc(1, sizeof(HiSVGTextContext));
     ctx->pango_ctx = pango_font_map_create_context (pango_cairo_font_map_get_default ());
+
+    pango_cairo_context_set_resolution (ctx->pango_ctx, dpi);
+    pango_context_set_language (ctx->pango_ctx, pango_language_from_string(language));
+    if (direction)
+    {
+        pango_context_set_base_dir(ctx->pango_ctx, *direction);
+    }
+    if (gravity)
+    {
+        pango_context_set_base_gravity (ctx->pango_ctx, *gravity);
+    }
     return ctx;
-}
-
-void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi)
-{
-    pango_cairo_context_set_resolution (context->pango_ctx, dpi);
-}
-
-void hisvg_text_context_set_language (HiSVGTextContext* context, const char* language)
-{
-    pango_context_set_language (context->pango_ctx, pango_language_from_string(language));
-}
-
-void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction)
-{
-    pango_context_set_base_dir(context->pango_ctx, direction);
-}
-
-void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity)
-{
-    pango_context_set_base_gravity (context->pango_ctx, gravity);
 }
 
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)

@@ -242,7 +242,7 @@ struct HiSVGRender {
 
     void (*free) (HiSVGRender * self);
 
-    void*            (*create_text_context)     (HiSVGDrawingCtx * ctx);
+    void*            (*create_text_context)     (HiSVGDrawingCtx * ctx, HiSVGState * state);
     void             (*render_text)	            (HiSVGDrawingCtx * ctx, void* layout, double x, double y);
     void             (*render_path)             (HiSVGDrawingCtx * ctx, const cairo_path_t *path);
     void             (*render_surface)          (HiSVGDrawingCtx * ctx, cairo_surface_t *surface,

@@ -545,17 +545,6 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGTextContextLayout *layout;
 
     fprintf(stderr, "############################# %s:%d:%s create layout context =%p|dpi_y=%f\n", __FILE__, __LINE__, __func__, context, ctx->dpi_y);
-    hisvg_text_context_set_resolution (context, ctx->dpi_y);
-
-    if (state->lang)
-        hisvg_text_context_set_language (context, state->lang);
-
-    if (state->unicode_bidi == UNICODE_BIDI_OVERRIDE || state->unicode_bidi == UNICODE_BIDI_EMBED)
-        hisvg_text_context_set_base_dir (context, state->text_dir);
-
-    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
-        hisvg_text_context_set_base_gravity (context, state->text_gravity);
-
     int font_size = _hisvg_css_normalize_font_size (state, ctx) * HISVG_TEXT_SCALE / ctx->dpi_y * 72;
 
     font_desc = hisvg_font_description_create("*", state->font_family,
@@ -581,7 +570,7 @@ hisvg_text_layout_new (HiSVGDrawingCtx * ctx, HiSVGState * state, const char *te
     HiSVGTextLayout *layout;
 
     if (ctx->text_context == NULL)
-        ctx->text_context = ctx->render->create_text_context (ctx);
+        ctx->text_context = ctx->render->create_text_context (ctx, state);
 
     layout = g_new0 (HiSVGTextLayout, 1);
 
@@ -609,7 +598,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     if (state->font_size.length == 0)
         return;
 
-    context = ctx->render->create_text_context (ctx);
+    context = ctx->render->create_text_context (ctx, state);
     layout = hisvg_text_create_layout (ctx, state, text, context);
     hisvg_text_context_layout_get_size (layout, &w, &h);
     fprintf(stderr, "...............................................get size w=%d|h=%d\n", w, h);

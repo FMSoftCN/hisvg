@@ -178,11 +178,7 @@ typedef struct _HiSVGTextRectangle {
     int height;
 } HiSVGTextRectangle;
 
-HiSVGTextContext* hisvg_create_text_context ();
-void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi);
-void hisvg_text_context_set_language (HiSVGTextContext* context, const char* language);
-void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction);
-void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity);
+HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
 
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
@@ -206,6 +202,5 @@ double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity);
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context);
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout);
 void hisvg_cairo_layout_path (cairo_t* cr, HiSVGTextContextLayout* layout);
-
 
 #endif // _HI_SVG_TEXT_HELPER_H_

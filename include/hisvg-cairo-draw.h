@@ -54,7 +54,7 @@
 G_BEGIN_DECLS 
 
 G_GNUC_INTERNAL
-void*        hisvg_cairo_create_text_context    (HiSVGDrawingCtx *ctx);
+void*        hisvg_cairo_create_text_context    (HiSVGDrawingCtx *ctx, HiSVGState * state);
 G_GNUC_INTERNAL
 void         hisvg_cairo_render_text     	    (HiSVGDrawingCtx *ctx, void* layout, double x, double y);
 G_GNUC_INTERNAL

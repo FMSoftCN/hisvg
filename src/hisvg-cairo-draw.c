@@ -390,12 +390,25 @@ _set_hisvg_affine (HiSVGCairoRender * render, cairo_matrix_t *affine)
 }
 
 void *
-hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx)
+hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx, HiSVGState * state)
 {
     HiSVGTextContext *context;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
 
-    context = hisvg_create_text_context ();
+    HiSVGTextDirection* direction =  NULL;
+    if (state->unicode_bidi == UNICODE_BIDI_OVERRIDE || state->unicode_bidi == UNICODE_BIDI_EMBED)
+    {
+        direction = &state->text_dir;
+    }
+
+    HiSVGTextGravity* gravity = NULL;
+    if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
+    {
+        gravity = &state->text_gravity;
+    }
+    context = hisvg_text_context_create (ctx->dpi_y, 
+            state->lang, direction, gravity);
+
     hisvg_cairo_update_text_context (render->cr, context);
     return context;
 }
