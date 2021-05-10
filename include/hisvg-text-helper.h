@@ -170,6 +170,7 @@ typedef struct _HiSVGTextContext {
 typedef struct _HiSVGTextContextLayout {
     struct _PangoLayout* pango_layout;
     HiSVGTextContext* context;
+    LAYOUT* layout;
 } HiSVGTextContextLayout;
 
 typedef struct _HiSVGTextRectangle {

@@ -204,7 +204,62 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
         int font_decor, const char* text)
 {
-    return NULL;
+    PLOGFONT lf = NULL;
+    if (text == NULL || strlen(text) == 0)
+    {
+        return NULL;
+    }
+
+    if (!(lf = CreateLogFontForMChar2UChar("utf-8")))
+    {
+        fprintf(stderr, "failed to create logfont for utf-8 charset\n");
+        return NULL;
+    }
+
+    Uchar32* ucs;
+    int consumed;
+    int n;
+    size_t left_len_text = strlen(text);
+    consumed  = GetUCharsUntilParagraphBoundary(lf, text, left_len_text, WSR_NOWRAP, &ucs, &n);
+    if (consumed <= 0)
+    {
+        DestroyLogFont(lf);
+        return NULL;
+    }
+
+    int max_line_extent = 100;
+    TEXTRUNS* tr = CreateTextRuns( ucs, n, context->lang_code, context->base_dir,
+        desc->log_font, MakeRGB(0, 0, 0), 0, NULL);
+
+    if (!InitComplexShapingEngine(tr)) {
+        fprintf(stderr, "%s: InitComplexShapingEngine returns FALSE\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    BreakOppo* bos = NULL;
+
+    int bos_len = UStrGetBreaks(context->lang_code,
+            CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
+            ucs, n, &bos);
+    if (bos_len <= 0) {
+        fprintf(stderr, "%s: UStrGetBreaks failed\n", __FUNCTION__);
+        return NULL;
+    }
+    LAYOUT* layout = CreateLayout(tr, GLYPH_GRAVITY_SOUTH,
+        bos, TRUE, max_line_extent, 0, letter_spacing, letter_spacing, 4, NULL, 0);
+
+    fprintf(stderr, "################################## letter_spacing=%d|font_name=%s|tr=%p|layout=%p\n", letter_spacing, desc->log_font, tr, layout);
+    LAYOUTLINE* line = NULL;
+    while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0))) {
+        fprintf(stderr, "line = %p\n", line);
+    }
+
+    HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
+    result->context = context;
+    result->layout = layout;
+
+    return result;
 }
 #endif
 
@@ -293,7 +348,7 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
     log_font_style[6] = 0;
 
     // <fonttype>-<family[,aliase]*>-<styles>-<width>-<height>-<charset[,charset]*>
-    snprintf(desc->log_font, 255, "%s-%s-%s-%d-%d-ISO8859-1,UTF-8",
+    snprintf(desc->log_font, 255, "%s-%s-%s-%d-%d-UTF-8",
             type ? type : "ttf",
             family ? family : HISVG_DEFAULT_FONT_FAMILY,
             log_font_style,
