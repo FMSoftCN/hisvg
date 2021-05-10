@@ -123,6 +123,9 @@ void hisvg_text_context_destroy (HiSVGTextContext* context)
 
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
 {
+    if (!context)
+        return 0;
+
     switch (context->gravity)
     {
         case GLYPH_GRAVITY_SOUTH:
@@ -140,11 +143,11 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
     }
 }
 
+#if 0
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
         int font_decor, const char* text)
 {
-#if 0
     PangoLayout* layout = pango_layout_new (context->pango_ctx);
     HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
     result->pango_layout = layout;
@@ -195,23 +198,30 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     pango_layout_set_alignment (layout, alignment);
 
     return result;
-#endif
 }
+#else
+HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
+        int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
+        int font_decor, const char* text)
+{
+    return NULL;
+}
+#endif
 
 void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
 {
-    g_object_unref (layout->pango_layout);
+    //g_object_unref (layout->pango_layout);
     free(layout);
 }
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
 {
-    pango_layout_get_size (layout->pango_layout, width, height);
+    //pango_layout_get_size (layout->pango_layout, width, height);
 }
 
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 {
-    return pango_layout_get_baseline(layout->pango_layout);
+//    return pango_layout_get_baseline(layout->pango_layout);
 }
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
@@ -299,11 +309,13 @@ void hisvg_font_description_destroy (HiSVGFontDescription* desc)
 
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)
 {
-    return layout->context;
+//    return layout->context;
+    return NULL;
 }
 
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect)
 {
+#if 0
     PangoRectangle irect, lrect;
     pango_layout_get_extents (layout->pango_layout, &irect, &lrect);
     if (ink_rect)
@@ -321,6 +333,7 @@ void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSV
         logical_rect->width = lrect.width;
         logical_rect->height = lrect.height;
     }
+#endif
 }
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
@@ -346,10 +359,10 @@ void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)
 
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-    pango_cairo_show_layout(cr, layout->pango_layout);
+//    pango_cairo_show_layout(cr, layout->pango_layout);
 }
 
 void hisvg_cairo_layout_path (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-    pango_cairo_layout_path(cr, layout->pango_layout);
+//    pango_cairo_layout_path(cr, layout->pango_layout);
 }
