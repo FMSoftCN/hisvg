@@ -53,36 +53,98 @@
 HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity)
 {
     HiSVGTextContext* ctx = (HiSVGTextContext*) calloc(1, sizeof(HiSVGTextContext));
-    ctx->pango_ctx = pango_font_map_create_context (pango_cairo_font_map_get_default ());
 
-    pango_cairo_context_set_resolution (ctx->pango_ctx, dpi);
-    pango_context_set_language (ctx->pango_ctx, pango_language_from_string(language));
+    ctx->dpi = dpi;
+    ctx->lang_code = language && strlen(language) >= 2 ? LanguageCodeFromISO639s1Code(language) : LANGCODE_unknown;
     if (direction)
     {
-        pango_context_set_base_dir(ctx->pango_ctx, *direction);
+        switch (*direction)
+        {
+            case HISVG_TEXT_DIRECTION_LTR:
+                ctx->base_dir = BIDI_PGDIR_LTR; 
+                break;
+            case HISVG_TEXT_DIRECTION_RTL:
+                ctx->base_dir = BIDI_PGDIR_RTL; 
+                break;
+            case HISVG_TEXT_DIRECTION_TTB_LTR:   // FIXME
+                ctx->base_dir = BIDI_PGDIR_LTR; 
+                break;
+            case HISVG_TEXT_DIRECTION_TTB_RTL:   // FIXME
+                ctx->base_dir = BIDI_PGDIR_RTL; 
+                break;
+            case HISVG_TEXT_DIRECTION_WEAK_LTR:
+                ctx->base_dir = BIDI_PGDIR_WLTR; 
+                break;
+            case HISVG_TEXT_DIRECTION_WEAK_RTL:
+                ctx->base_dir = BIDI_PGDIR_WRTL; 
+                break;
+            case HISVG_TEXT_DIRECTION_NEUTRAL:
+                ctx->base_dir = BIDI_TYPE_ON; 
+                break;
+        }
     }
+
     if (gravity)
     {
-        pango_context_set_base_gravity (ctx->pango_ctx, *gravity);
+        switch (*gravity)
+        {
+            case HISVG_TEXT_GRAVITY_SOUTH:
+                ctx->gravity = GLYPH_GRAVITY_SOUTH;
+                break;
+            case HISVG_TEXT_GRAVITY_EAST:
+                ctx->gravity = GLYPH_GRAVITY_EAST;
+                break;
+            case HISVG_TEXT_GRAVITY_NORTH:
+                ctx->gravity = GLYPH_GRAVITY_NORTH;
+                break;
+            case HISVG_TEXT_GRAVITY_WEST:
+                ctx->gravity = GLYPH_GRAVITY_WEST;
+                break;
+            case HISVG_TEXT_GRAVITY_AUTO:
+                ctx->gravity = GLYPH_GRAVITY_AUTO;
+                break;
+            default:
+                ctx->gravity = GLYPH_GRAVITY_AUTO;
+                break;
+        }
     }
+    else
+    {
+        ctx->gravity = GLYPH_GRAVITY_AUTO;
+    }
+
     return ctx;
 }
 
 void hisvg_text_context_destroy (HiSVGTextContext* context)
 {
-    g_object_unref (context->pango_ctx);
     free(context);
 }
 
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
 {
-    return pango_context_get_gravity (context->pango_ctx);
+    switch (context->gravity)
+    {
+        case GLYPH_GRAVITY_SOUTH:
+            return HISVG_TEXT_GRAVITY_SOUTH;
+        case GLYPH_GRAVITY_EAST:
+            return HISVG_TEXT_GRAVITY_EAST;
+        case GLYPH_GRAVITY_NORTH:
+            return HISVG_TEXT_GRAVITY_NORTH;
+        case GLYPH_GRAVITY_WEST:
+            return HISVG_TEXT_GRAVITY_WEST;
+        case GLYPH_GRAVITY_AUTO:
+            return HISVG_TEXT_GRAVITY_AUTO;
+        default:
+            return HISVG_TEXT_GRAVITY_AUTO;
+    }
 }
 
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
         int font_decor, const char* text)
 {
+#if 0
     PangoLayout* layout = pango_layout_new (context->pango_ctx);
     HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
     result->pango_layout = layout;
@@ -133,6 +195,7 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     pango_layout_set_alignment (layout, alignment);
 
     return result;
+#endif
 }
 
 void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
@@ -220,7 +283,7 @@ double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
 
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)
 {
-    pango_cairo_update_context (cr, context->pango_ctx);
+//    pango_cairo_update_context (cr, context->pango_ctx);
 }
 
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout)

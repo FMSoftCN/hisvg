@@ -51,6 +51,11 @@
 #include <cairo.h>
 #include <pango/pangocairo.h>
 
+#include <minigui/common.h>
+#include <minigui/minigui.h>
+#include <minigui/gdi.h>
+#include <minigui/window.h>
+
 enum {
     TEXT_NORMAL = 0x00,
     TEXT_OVERLINE = 0x01,
@@ -163,7 +168,10 @@ typedef struct _HiSVGFontDescription {
 } HiSVGFontDescription;
 
 typedef struct _HiSVGTextContext {
-    struct _PangoContext* pango_ctx;
+    double dpi;
+    LanguageCode lang_code;
+    ParagraphDir base_dir;
+    uint32_t gravity;
 } HiSVGTextContext;
 
 typedef struct _HiSVGTextContextLayout {
