@@ -147,11 +147,10 @@ typedef enum {
   HISVG_TEXT_ALIGN_RIGHT
 } HiSVGTextAlignment;
 
-typedef struct _PangoFontMap HiSVGFontMap;
+typedef struct _HiSVGTextContext HiSVGTextContext;
+typedef struct _HiSVGTextContextLayout HiSVGTextContextLayout;
+
 typedef struct _PangoFontDescription HiSVGFontDescription;
-typedef struct _PangoContext HiSVGTextContext;
-typedef struct _PangoLayout HiSVGTextContextLayout;
-typedef struct _PangoLayoutIter HiSVGTextContextLayoutIter;
 typedef struct _PangoRectangle HiSVGTextRectangle;
 typedef struct _PangoLanguage HiSVGTextLanguage;
 typedef struct _PangoAttrList HiSVGTextAttrList;
@@ -161,16 +160,13 @@ typedef struct _PangoAttribute HiSVGTextAttribute;
 HiSVGTextContext* hisvg_create_text_context ();
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
-HiSVGTextLanguage* hisvg_text_language_from_string (const char *language);
-void hisvg_text_context_set_language (HiSVGTextContext* context, HiSVGTextLanguage* language);
+void hisvg_text_context_set_language (HiSVGTextContext* context, const char* language);
 void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction);
 void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity);
 
 HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context);
-HiSVGTextContextLayoutIter* hisvg_text_context_layout_get_iter (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);
-void hisvg_text_context_layout_iter_free (HiSVGTextContextLayoutIter* iter);
-int hisvg_text_context_layout_iter_get_baseline (HiSVGTextContextLayoutIter* iter);
+int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment);
 void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs); 
 void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length);

@@ -48,89 +48,90 @@
 #include <pango/pangocairo.h>
 #include "hisvg-text-helper.h"
 
-typedef struct _PangoFontMap HiSVGFontMap;
-typedef struct _PangoContext HiSVGTextContext;
-typedef struct _PangoLayout HiSVGTextContextLayout;
+typedef struct _HiSVGTextContext {
+    struct _PangoContext* pango_ctx;
+} HiSVGTextContext; 
+
+typedef struct _HiSVGTextContextLayout {
+    struct _PangoLayout* pango_layout;
+    HiSVGTextContext* context;
+} HiSVGTextContextLayout;
+
 typedef struct _PangoRectangle HiSVGTextRectangle;
 
 HiSVGTextContext* hisvg_create_text_context ()
 {
-    return pango_font_map_create_context (pango_cairo_font_map_get_default ());
+    HiSVGTextContext* ctx = (HiSVGTextContext*) calloc(1, sizeof(HiSVGTextContext));
+    ctx->pango_ctx = pango_font_map_create_context (pango_cairo_font_map_get_default ());
+    return ctx;
 }
 
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi)
 {
-    pango_cairo_context_set_resolution (context, dpi);
+    pango_cairo_context_set_resolution (context->pango_ctx, dpi);
 }
 
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
 {
-    return pango_context_get_gravity (context);
+    return pango_context_get_gravity (context->pango_ctx);
 }
 
-void hisvg_text_context_set_language (HiSVGTextContext* context, HiSVGTextLanguage* language)
+void hisvg_text_context_set_language (HiSVGTextContext* context, const char* language)
 {
-    pango_context_set_language (context, language);
+    pango_context_set_language (context->pango_ctx, pango_language_from_string(language));
 }
 
 void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction)
 {
-    pango_context_set_base_dir(context, direction);
+    pango_context_set_base_dir(context->pango_ctx, direction);
 }
 
 void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity)
 {
-    pango_context_set_base_gravity (context, gravity);
+    pango_context_set_base_gravity (context->pango_ctx, gravity);
 }
 
 HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context)
 {
-    return pango_layout_new (context);
-}
-
-HiSVGTextContextLayoutIter* hisvg_text_context_layout_get_iter (HiSVGTextContextLayout* layout)
-{
-    return pango_layout_get_iter (layout);
+    HiSVGTextContextLayout* layout = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
+    layout->pango_layout = pango_layout_new (context->pango_ctx);
+    layout->context = context;
+    return  layout;
 }
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
 {
-    pango_layout_get_size (layout, width, height);
+    pango_layout_get_size (layout->pango_layout, width, height);
 }
 
-void hisvg_text_context_layout_iter_free (HiSVGTextContextLayoutIter* iter)
+int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 {
-    pango_layout_iter_free (iter);
-}
-
-int hisvg_text_context_layout_iter_get_baseline (HiSVGTextContextLayoutIter* iter)
-{
-    return pango_layout_iter_get_baseline (iter);
+    return pango_layout_get_baseline(layout->pango_layout);
 }
 
 void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment)
 {
-    return pango_layout_set_alignment (layout, alignment);
+    return pango_layout_set_alignment (layout->pango_layout, alignment);
 }
 
 void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs)
 {
-    return pango_layout_set_attributes (layout, attrs);
+    return pango_layout_set_attributes (layout->pango_layout, attrs);
 }
 
 void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length)
 {
-    return pango_layout_set_text (layout, text, length);
+    return pango_layout_set_text (layout->pango_layout, text, length);
 }
 
 void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc)
 {
-    pango_layout_set_font_description (layout, desc);
+    pango_layout_set_font_description (layout->pango_layout, desc);
 }
 
 HiSVGFontDescription* hisvg_text_context_get_font_description (HiSVGTextContext* context)
 {
-    return pango_context_get_font_description(context);
+    return pango_context_get_font_description(context->pango_ctx);
 }
 
 HiSVGFontDescription* hisvg_font_description_copy (const HiSVGFontDescription* desc)
@@ -205,12 +206,13 @@ HiSVGTextAttribute* hisvg_text_attr_letter_spacing_new (int letter_spacing)
 
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)
 {
-    return pango_layout_get_context(layout);
+//    return pango_layout_get_context(layout);
+    return layout->context;
 }
 
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect)
 {
-    pango_layout_get_extents (layout, ink_rect, logical_rect);
+    pango_layout_get_extents (layout->pango_layout, ink_rect, logical_rect);
 }
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
@@ -218,22 +220,17 @@ double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
     return pango_gravity_to_rotation (gravity);
 }
 
-HiSVGTextLanguage* hisvg_text_language_from_string (const char *language)
-{
-    return pango_language_from_string(language);
-}
-
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)
 {
-    pango_cairo_update_context (cr, context);
+    pango_cairo_update_context (cr, context->pango_ctx);
 }
 
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-    pango_cairo_show_layout(cr, layout);
+    pango_cairo_show_layout(cr, layout->pango_layout);
 }
 
 void hisvg_cairo_layout_path (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-    pango_cairo_layout_path(cr, layout);
+    pango_cairo_layout_path(cr, layout->pango_layout);
 }
