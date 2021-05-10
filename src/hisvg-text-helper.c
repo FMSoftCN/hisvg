@@ -82,12 +82,60 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
     return pango_context_get_gravity (context->pango_ctx);
 }
 
-HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context)
+HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
+        int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
+        int font_decor, const char* text)
 {
-    HiSVGTextContextLayout* layout = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
-    layout->pango_layout = pango_layout_new (context->pango_ctx);
-    layout->context = context;
-    return  layout;
+    PangoLayout* layout = pango_layout_new (context->pango_ctx);
+    HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
+    result->pango_layout = layout;
+    result->context = context;
+    PangoAttrList* attr_list;
+    PangoAttribute* attribute;
+
+    // set font description
+    PangoFontDescription* pdesc = pango_font_description_new();
+    pango_font_description_set_family_static(pdesc, desc->family);
+    pango_font_description_set_style(pdesc, desc->style);
+    pango_font_description_set_variant(pdesc, desc->variant);
+    pango_font_description_set_weight(pdesc, desc->weight);
+    pango_font_description_set_stretch(pdesc, desc->stretch);
+    pango_font_description_set_size(pdesc, desc->size);
+    pango_layout_set_font_description (layout, pdesc);
+    pango_font_description_free(pdesc);
+
+    attr_list = pango_attr_list_new ();
+    attribute = pango_attr_letter_spacing_new (letter_spacing);
+    attribute->start_index = 0;
+    attribute->end_index = G_MAXINT;
+    pango_attr_list_insert (attr_list, attribute);
+    if (text)
+    {
+        if (font_decor & TEXT_UNDERLINE) {
+            attribute = pango_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
+            attribute->start_index = 0;
+            attribute->end_index = -1;
+            pango_attr_list_insert (attr_list, attribute);
+        }
+        if (font_decor & TEXT_STRIKE) {
+            attribute = pango_attr_strikethrough_new (TRUE);
+            attribute->start_index = 0;
+            attribute->end_index = -1;
+            pango_attr_list_insert (attr_list, attribute);
+        }
+    }
+
+    pango_layout_set_attributes (layout, attr_list);
+    pango_attr_list_unref (attr_list);
+
+    if (text)
+        pango_layout_set_text (layout, text, -1);
+    else
+        pango_layout_set_text (layout, NULL, 0);
+
+    pango_layout_set_alignment (layout, alignment);
+
+    return result;
 }
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
@@ -98,36 +146,6 @@ void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* wi
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 {
     return pango_layout_get_baseline(layout->pango_layout);
-}
-
-void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment)
-{
-    return pango_layout_set_alignment (layout->pango_layout, alignment);
-}
-
-void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs)
-{
-    return pango_layout_set_attributes (layout->pango_layout, attrs);
-}
-
-void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length)
-{
-    return pango_layout_set_text (layout->pango_layout, text, length);
-}
-
-void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc)
-{
-    PangoFontDescription* pdesc = pango_font_description_new();
-
-    pango_font_description_set_family_static(pdesc, desc->family);
-    pango_font_description_set_style(pdesc, desc->style);
-    pango_font_description_set_variant(pdesc, desc->variant);
-    pango_font_description_set_weight(pdesc, desc->weight);
-    pango_font_description_set_stretch(pdesc, desc->stretch);
-    pango_font_description_set_size(pdesc, desc->size);
-    pango_layout_set_font_description (layout->pango_layout, pdesc);
-
-    pango_font_description_free(pdesc);
 }
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
@@ -153,36 +171,6 @@ void hisvg_font_description_free (HiSVGFontDescription* desc)
     free(desc->type);
     free(desc->family);
     free(desc);
-}
-
-HiSVGTextAttrList*  hisvg_text_attr_list_new (void)
-{
-    return pango_attr_list_new();
-}
-
-void hisvg_text_attr_list_unref (HiSVGTextAttrList* list)
-{
-    pango_attr_list_unref (list);
-}
-
-void hisvg_text_attr_list_insert (HiSVGTextAttrList* list, HiSVGTextAttribute* attr)
-{
-    pango_attr_list_insert (list, attr);
-}
-
-HiSVGTextAttribute* hisvg_text_attr_strikethrough_new (gboolean strikethrough)
-{
-    return pango_attr_strikethrough_new (strikethrough);
-}
-
-HiSVGTextAttribute* hisvg_text_attr_underline_new (PangoUnderline underline)
-{
-    return pango_attr_underline_new (underline);
-}
-
-HiSVGTextAttribute* hisvg_text_attr_letter_spacing_new (int letter_spacing)
-{
-    return pango_attr_letter_spacing_new (letter_spacing);
 }
 
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)

@@ -543,8 +543,6 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
 {
     HiSVGFontDescription *font_desc;
     HiSVGTextContextLayout *layout;
-    HiSVGTextAttrList *attr_list;
-    HiSVGTextAttribute *attribute;
 
     fprintf(stderr, "############################# %s:%d:%s create layout context =%p|dpi_y=%f\n", __FILE__, __LINE__, __func__, context, ctx->dpi_y);
     hisvg_text_context_set_resolution (context, ctx->dpi_y);
@@ -558,48 +556,20 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
         hisvg_text_context_set_base_gravity (context, state->text_gravity);
 
-    int font_size = _hisvg_css_normalize_font_size (state, ctx) *
-        HISVG_TEXT_SCALE / ctx->dpi_y * 72;
+    int font_size = _hisvg_css_normalize_font_size (state, ctx) * HISVG_TEXT_SCALE / ctx->dpi_y * 72;
+
     font_desc = hisvg_font_description_create("*", state->font_family,
             state->font_style, state->font_variant, state->font_weight,
             state->font_stretch, font_size, 1);
 
-    layout = hisvg_text_context_layout_new (context);
-    hisvg_text_context_layout_set_font_description (layout, font_desc);
+    int letter_spacing = _hisvg_css_normalize_length (&state->letter_spacing, 
+            ctx, 'h') * HISVG_TEXT_SCALE;
+    HiSVGTextAlignment alignment = (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
+        HISVG_TEXT_ALIGN_LEFT : HISVG_TEXT_ALIGN_RIGHT;
+    layout = hisvg_text_context_layout_create (context, 
+        letter_spacing, alignment, font_desc, state->font_decor, text);
+
     hisvg_font_description_free (font_desc);
-
-    attr_list = hisvg_text_attr_list_new ();
-    attribute = hisvg_text_attr_letter_spacing_new (_hisvg_css_normalize_length (&state->letter_spacing,
-                                                                           ctx, 'h') * HISVG_TEXT_SCALE);
-    attribute->start_index = 0;
-    attribute->end_index = G_MAXINT;
-    hisvg_text_attr_list_insert (attr_list, attribute);
-
-    if (state->has_font_decor && text) {
-        if (state->font_decor & TEXT_UNDERLINE) {
-            attribute = hisvg_text_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
-            attribute->start_index = 0;
-            attribute->end_index = -1;
-            hisvg_text_attr_list_insert (attr_list, attribute);
-        }
-	if (state->font_decor & TEXT_STRIKE) {
-            attribute = hisvg_text_attr_strikethrough_new (TRUE);
-            attribute->start_index = 0;
-            attribute->end_index = -1;
-            hisvg_text_attr_list_insert (attr_list, attribute);
-	}
-    }
-
-    hisvg_text_context_layout_set_attributes (layout, attr_list);
-    hisvg_text_attr_list_unref (attr_list);
-
-    if (text)
-        hisvg_text_context_layout_set_text (layout, text, -1);
-    else
-        hisvg_text_context_layout_set_text (layout, NULL, 0);
-
-    hisvg_text_context_layout_set_alignment (layout, (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
-                                HISVG_TEXT_ALIGN_LEFT : HISVG_TEXT_ALIGN_RIGHT);
 
     return layout;
 }
@@ -642,6 +612,7 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     context = ctx->render->create_text_context (ctx);
     layout = hisvg_text_create_layout (ctx, state, text, context);
     hisvg_text_context_layout_get_size (layout, &w, &h);
+    fprintf(stderr, "...............................................get size w=%d|h=%d\n", w, h);
     baseline = hisvg_text_context_layout_get_baseline(layout);
     offset = baseline / (double) HISVG_TEXT_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);

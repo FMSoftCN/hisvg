@@ -178,9 +178,6 @@ typedef struct _HiSVGTextRectangle {
     int height;
 } HiSVGTextRectangle;
 
-typedef struct _PangoAttrList HiSVGTextAttrList;
-typedef struct _PangoAttribute HiSVGTextAttribute;
-
 HiSVGTextContext* hisvg_create_text_context ();
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi);
 void hisvg_text_context_set_language (HiSVGTextContext* context, const char* language);
@@ -188,15 +185,14 @@ void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirect
 void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
 
-HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context);
+HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
+        int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
+        int font_decoration, const char* text);
+
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);
-int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
-void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment);
-void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs);
-void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length);
-void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc);
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect);
+int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
@@ -204,14 +200,6 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
         guint size_is_absolute
         );
 void hisvg_font_description_free (HiSVGFontDescription* desc);
-
-HiSVGTextAttrList*  hisvg_text_attr_list_new (void);
-void hisvg_text_attr_list_unref (HiSVGTextAttrList* list);
-void hisvg_text_attr_list_insert (HiSVGTextAttrList* list, HiSVGTextAttribute* attr);
-
-HiSVGTextAttribute* hisvg_text_attr_strikethrough_new (gboolean strikethrough);
-HiSVGTextAttribute* hisvg_text_attr_underline_new (PangoUnderline underline);
-HiSVGTextAttribute* hisvg_text_attr_letter_spacing_new (int letter_spacing);
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity);
 
