@@ -68,6 +68,12 @@ HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, H
     return ctx;
 }
 
+void hisvg_text_context_destroy (HiSVGTextContext* context)
+{
+    g_object_unref (context->pango_ctx);
+    free(context);
+}
+
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
 {
     return pango_context_get_gravity (context->pango_ctx);
@@ -129,6 +135,12 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     return result;
 }
 
+void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
+{
+    g_object_unref (layout->pango_layout);
+    free(layout);
+}
+
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
 {
     pango_layout_get_size (layout->pango_layout, width, height);
@@ -157,7 +169,7 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
     return desc;
 }
 
-void hisvg_font_description_free (HiSVGFontDescription* desc)
+void hisvg_font_description_destroy (HiSVGFontDescription* desc)
 {
     free(desc->type);
     free(desc->family);
@@ -192,7 +204,18 @@ void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSV
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
 {
-    return pango_gravity_to_rotation (gravity);
+    double rotation;
+    switch (gravity)
+    {
+        default:
+        case HISVG_TEXT_GRAVITY_AUTO: /* shut gcc up */
+        case HISVG_TEXT_GRAVITY_SOUTH: rotation =  0;      break;
+        case HISVG_TEXT_GRAVITY_NORTH: rotation =  G_PI;   break;
+        case HISVG_TEXT_GRAVITY_EAST:  rotation = -G_PI_2; break;
+        case HISVG_TEXT_GRAVITY_WEST:  rotation = +G_PI_2; break;
+    }
+
+    return rotation;
 }
 
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)

@@ -533,7 +533,7 @@ struct _HiSVGTextLayout {
 static void
 hisvg_text_layout_free (HiSVGTextLayout * layout)
 {
-    g_object_unref (layout->layout);
+    hisvg_text_context_layout_destroy (layout->layout);
     g_free (layout);
 }
 
@@ -558,7 +558,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     layout = hisvg_text_context_layout_create (context, 
         letter_spacing, alignment, font_desc, state->font_decor, text);
 
-    hisvg_font_description_free (font_desc);
+    hisvg_font_description_destroy (font_desc);
 
     return layout;
 }
@@ -618,8 +618,8 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     else
         *x += w / (double)HISVG_TEXT_SCALE;
 
-    g_object_unref (layout);
-    g_object_unref (context);
+    hisvg_text_context_layout_destroy (layout);
+    hisvg_text_context_destroy (context);
 }
 
 static gdouble

@@ -179,11 +179,13 @@ typedef struct _HiSVGTextRectangle {
 } HiSVGTextRectangle;
 
 HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity);
+void hisvg_text_context_destroy (HiSVGTextContext* context);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
 
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
         int font_decoration, const char* text);
+void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout);
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout);
@@ -195,7 +197,7 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
         HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size,
         guint size_is_absolute
         );
-void hisvg_font_description_free (HiSVGFontDescription* desc);
+void hisvg_font_description_destroy (HiSVGFontDescription* desc);
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity);
 
