@@ -53,14 +53,9 @@ typedef struct _PangoContext HiSVGTextContext;
 typedef struct _PangoLayout HiSVGTextContextLayout;
 typedef struct _PangoRectangle HiSVGTextRectangle;
 
-HiSVGFontMap* hisvg_font_map_get_default ()
+HiSVGTextContext* hisvg_create_text_context ()
 {
-    return pango_cairo_font_map_get_default ();
-}
-
-HiSVGTextContext* hisvg_create_text_context (HiSVGFontMap* fontmap)
-{
-    return pango_font_map_create_context (fontmap);
+    return pango_font_map_create_context (pango_cairo_font_map_get_default ());
 }
 
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi)

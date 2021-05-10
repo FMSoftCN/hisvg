@@ -392,12 +392,10 @@ _set_hisvg_affine (HiSVGCairoRender * render, cairo_matrix_t *affine)
 void *
 hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx)
 {
-    HiSVGFontMap *fontmap;
     HiSVGTextContext *context;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
 
-    fontmap = hisvg_font_map_get_default ();
-    context = hisvg_create_text_context (fontmap);
+    context = hisvg_create_text_context ();
     hisvg_cairo_update_text_context (render->cr, context);
     hisvg_text_context_set_resolution (context, ctx->dpi_y);
     return context;

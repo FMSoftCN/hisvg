@@ -158,8 +158,7 @@ typedef struct _PangoAttrList HiSVGTextAttrList;
 typedef struct _PangoAttribute HiSVGTextAttribute;
 
 
-HiSVGFontMap* hisvg_font_map_get_default ();
-HiSVGTextContext* hisvg_create_text_context (HiSVGFontMap* fontmap);
+HiSVGTextContext* hisvg_create_text_context ();
 void hisvg_text_context_set_resolution (HiSVGTextContext* context, double dpi);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
 HiSVGTextLanguage* hisvg_text_language_from_string (const char *language);
