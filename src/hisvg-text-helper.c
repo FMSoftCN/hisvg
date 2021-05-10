@@ -48,6 +48,8 @@
 #include <pango/pangocairo.h>
 #include "hisvg-text-helper.h"
 
+#define HISVG_DEFAULT_FONT_FAMILY "serif"
+
 HiSVGTextContext* hisvg_create_text_context ()
 {
     HiSVGTextContext* ctx = (HiSVGTextContext*) calloc(1, sizeof(HiSVGTextContext));
@@ -78,11 +80,6 @@ void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGr
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
 {
     return pango_context_get_gravity (context->pango_ctx);
-}
-
-HiSVGFontDescription* hisvg_text_context_get_font_description (HiSVGTextContext* context)
-{
-    return pango_context_get_font_description(context->pango_ctx);
 }
 
 HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context)
@@ -120,47 +117,42 @@ void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const c
 
 void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc)
 {
-    pango_layout_set_font_description (layout->pango_layout, desc);
+    PangoFontDescription* pdesc = pango_font_description_new();
+
+    pango_font_description_set_family_static(pdesc, desc->family);
+    pango_font_description_set_style(pdesc, desc->style);
+    pango_font_description_set_variant(pdesc, desc->variant);
+    pango_font_description_set_weight(pdesc, desc->weight);
+    pango_font_description_set_stretch(pdesc, desc->stretch);
+    pango_font_description_set_size(pdesc, desc->size);
+    pango_layout_set_font_description (layout->pango_layout, pdesc);
+
+    pango_font_description_free(pdesc);
 }
 
-HiSVGFontDescription* hisvg_font_description_copy (const HiSVGFontDescription* desc)
+HiSVGFontDescription* hisvg_font_description_create (const char* type,
+        const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size,
+        guint size_is_absolute
+        )
 {
-    return pango_font_description_copy(desc);
-}
-
-void hisvg_font_description_set_family_static (HiSVGFontDescription* desc,  const char* family)
-{
-    pango_font_description_set_family_static (desc, family);
-}
-
-void hisvg_font_description_set_style (HiSVGFontDescription* desc, HiSVGTextStyle style)
-{
-    pango_font_description_set_style (desc, style);
-}
-
-void hisvg_font_description_set_variant (HiSVGFontDescription* desc, HiSVGTextVariant variant)
-{
-    pango_font_description_set_variant (desc, variant);
-}
-
-void hisvg_font_description_set_weight (HiSVGFontDescription* desc, HiSVGTextWeight weight)
-{
-    pango_font_description_set_weight (desc, weight);
-}
-
-void hisvg_font_description_set_stretch (HiSVGFontDescription* desc, HiSVGTextStretch stretch)
-{
-    pango_font_description_set_stretch (desc, stretch);
-}
-
-void hisvg_font_description_set_size (HiSVGFontDescription* desc, gint size)
-{
-    pango_font_description_set_size (desc, size);
+    HiSVGFontDescription* desc = (HiSVGFontDescription*) calloc(1, sizeof(HiSVGFontDescription));
+    desc->type = type ? strdup(type) : NULL;
+    desc->family = family ? strdup(family) : strdup(HISVG_DEFAULT_FONT_FAMILY);
+    desc->style = style;
+    desc->variant = variant;
+    desc->weight = weight;
+    desc->stretch = stretch;
+    desc->size = size;
+    desc->size_is_absolute = size_is_absolute;
+    return desc;
 }
 
 void hisvg_font_description_free (HiSVGFontDescription* desc)
 {
-    pango_font_description_free (desc);
+    free(desc->type);
+    free(desc->family);
+    free(desc);
 }
 
 HiSVGTextAttrList*  hisvg_text_attr_list_new (void)

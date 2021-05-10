@@ -148,6 +148,20 @@ typedef enum {
 } HiSVGTextAlignment;
 
 
+typedef struct _HiSVGFontDescription {
+    char* type;
+    char* family;
+
+    HiSVGTextStyle style;
+    HiSVGTextVariant variant;
+    HiSVGTextWeight weight;
+    HiSVGTextStretch stretch;
+    HiSVGTextGravity gravity;
+
+    guint size_is_absolute : 1;
+    int size;
+} HiSVGFontDescription;
+
 typedef struct _HiSVGTextContext {
     struct _PangoContext* pango_ctx;
 } HiSVGTextContext;
@@ -164,7 +178,6 @@ typedef struct _HiSVGTextRectangle {
     int height;
 } HiSVGTextRectangle;
 
-typedef struct _PangoFontDescription HiSVGFontDescription;
 typedef struct _PangoAttrList HiSVGTextAttrList;
 typedef struct _PangoAttribute HiSVGTextAttribute;
 
@@ -174,25 +187,22 @@ void hisvg_text_context_set_language (HiSVGTextContext* context, const char* lan
 void hisvg_text_context_set_base_dir (HiSVGTextContext* context, HiSVGTextDirection direction);
 void hisvg_text_context_set_base_gravity (HiSVGTextContext* context, HiSVGTextGravity gravity);
 HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
-HiSVGFontDescription* hisvg_text_context_get_font_description (HiSVGTextContext* context);
 
 HiSVGTextContextLayout* hisvg_text_context_layout_new (HiSVGTextContext* context);
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_set_alignment (HiSVGTextContextLayout* layout, HiSVGTextAlignment alignment);
-void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs); 
+void hisvg_text_context_layout_set_attributes (HiSVGTextContextLayout* layout, HiSVGTextAttrList* attrs);
 void hisvg_text_context_layout_set_text (HiSVGTextContextLayout* layout, const char* text, int length);
 void hisvg_text_context_layout_set_font_description (HiSVGTextContextLayout* layout, const HiSVGFontDescription* desc);
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout);
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect);
 
-HiSVGFontDescription* hisvg_font_description_copy (const HiSVGFontDescription* desc);
-void hisvg_font_description_set_family_static (HiSVGFontDescription* desc,  const char* family);
-void hisvg_font_description_set_style (HiSVGFontDescription* desc, HiSVGTextStyle style);
-void hisvg_font_description_set_variant (HiSVGFontDescription* desc, HiSVGTextVariant variant);
-void hisvg_font_description_set_weight (HiSVGFontDescription* desc, HiSVGTextWeight weight);
-void hisvg_font_description_set_stretch (HiSVGFontDescription* desc, HiSVGTextStretch stretch);
-void hisvg_font_description_set_size (HiSVGFontDescription* desc, gint size);
+HiSVGFontDescription* hisvg_font_description_create (const char* type,
+        const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size,
+        guint size_is_absolute
+        );
 void hisvg_font_description_free (HiSVGFontDescription* desc);
 
 HiSVGTextAttrList*  hisvg_text_attr_list_new (void);

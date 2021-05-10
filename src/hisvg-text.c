@@ -558,18 +558,11 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity))
         hisvg_text_context_set_base_gravity (context, state->text_gravity);
 
-    font_desc = hisvg_font_description_copy (hisvg_text_context_get_font_description (context));
-
-    if (state->font_family)
-        hisvg_font_description_set_family_static (font_desc, state->font_family);
-
-    hisvg_font_description_set_style (font_desc, state->font_style);
-    hisvg_font_description_set_variant (font_desc, state->font_variant);
-    hisvg_font_description_set_weight (font_desc, state->font_weight);
-    hisvg_font_description_set_stretch (font_desc, state->font_stretch);
-    hisvg_font_description_set_size (font_desc,
-                                     _hisvg_css_normalize_font_size (state, ctx) *
-                                     HISVG_TEXT_SCALE / ctx->dpi_y * 72);
+    int font_size = _hisvg_css_normalize_font_size (state, ctx) *
+        HISVG_TEXT_SCALE / ctx->dpi_y * 72;
+    font_desc = hisvg_font_description_create("*", state->font_family,
+            state->font_style, state->font_variant, state->font_weight,
+            state->font_stretch, font_size, 1);
 
     layout = hisvg_text_context_layout_new (context);
     hisvg_text_context_layout_set_font_description (layout, font_desc);
@@ -580,7 +573,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
                                                                            ctx, 'h') * HISVG_TEXT_SCALE);
     attribute->start_index = 0;
     attribute->end_index = G_MAXINT;
-    hisvg_text_attr_list_insert (attr_list, attribute); 
+    hisvg_text_attr_list_insert (attr_list, attribute);
 
     if (state->has_font_decor && text) {
         if (state->font_decor & TEXT_UNDERLINE) {
