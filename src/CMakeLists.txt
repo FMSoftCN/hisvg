@@ -42,10 +42,10 @@ list(APPEND hisvg_SOURCES
 
 include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS} ${HIDOMLAYOUT_INCLUDE_DIRS} 
     ${HICairo_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${PANGO_INCLUDE_DIRS} ${GIO_UNIX_INCLUDE_DIRS}
-    ${CROCO_INCLUDE_DIRS})
+    ${MINIGUI_INCLUDE_DIRS})
 link_directories(${HIDOMLAYOUT_LIBRARY_DIRS})
 add_library(hisvg SHARED ${hisvg_SOURCES})
-target_link_libraries(hisvg ${GLIB_LIBRARIES}  ${HIDOMLAYOUT_LIBRARIES} ${HICairo_LIBRARIES} ${LIBXML2_LIBRARY})
+target_link_libraries(hisvg ${GLIB_LIBRARIES}  ${HIDOMLAYOUT_LIBRARIES} ${HICairo_LIBRARIES} ${LIBXML2_LIBRARY} ${MINIGUI_LIBRARIES} )
 
 configure_file(hisvg.pc.in hisvg.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hisvg.pc DESTINATION lib/pkgconfig)
