@@ -545,11 +545,11 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGTextContextLayout *layout;
 
     fprintf(stderr, "############################# %s:%d:%s create layout context =%p|dpi_y=%f\n", __FILE__, __LINE__, __func__, context, ctx->dpi_y);
-    int font_size = _hisvg_css_normalize_font_size (state, ctx) * HISVG_TEXT_SCALE / ctx->dpi_y * 72;
+    int font_size = _hisvg_css_normalize_font_size (state, ctx) / ctx->dpi_y * 72;
 
-    font_desc = hisvg_font_description_create("*", state->font_family,
+    font_desc = hisvg_font_description_create(NULL, state->font_family,
             state->font_style, state->font_variant, state->font_weight,
-            state->font_stretch, font_size, 1);
+            state->font_stretch, font_size);
 
     int letter_spacing = _hisvg_css_normalize_length (&state->letter_spacing, 
             ctx, 'h') * HISVG_TEXT_SCALE;

@@ -61,25 +61,25 @@ HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, H
         switch (*direction)
         {
             case HISVG_TEXT_DIRECTION_LTR:
-                ctx->base_dir = BIDI_PGDIR_LTR; 
+                ctx->base_dir = BIDI_PGDIR_LTR;
                 break;
             case HISVG_TEXT_DIRECTION_RTL:
-                ctx->base_dir = BIDI_PGDIR_RTL; 
+                ctx->base_dir = BIDI_PGDIR_RTL;
                 break;
             case HISVG_TEXT_DIRECTION_TTB_LTR:   // FIXME
-                ctx->base_dir = BIDI_PGDIR_LTR; 
+                ctx->base_dir = BIDI_PGDIR_LTR;
                 break;
             case HISVG_TEXT_DIRECTION_TTB_RTL:   // FIXME
-                ctx->base_dir = BIDI_PGDIR_RTL; 
+                ctx->base_dir = BIDI_PGDIR_RTL;
                 break;
             case HISVG_TEXT_DIRECTION_WEAK_LTR:
-                ctx->base_dir = BIDI_PGDIR_WLTR; 
+                ctx->base_dir = BIDI_PGDIR_WLTR;
                 break;
             case HISVG_TEXT_DIRECTION_WEAK_RTL:
-                ctx->base_dir = BIDI_PGDIR_WRTL; 
+                ctx->base_dir = BIDI_PGDIR_WRTL;
                 break;
             case HISVG_TEXT_DIRECTION_NEUTRAL:
-                ctx->base_dir = BIDI_TYPE_ON; 
+                ctx->base_dir = BIDI_TYPE_ON;
                 break;
         }
     }
@@ -216,26 +216,84 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
-        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size,
-        guint size_is_absolute
-        )
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size)
 {
+    char log_font_style[7] = {0};
     HiSVGFontDescription* desc = (HiSVGFontDescription*) calloc(1, sizeof(HiSVGFontDescription));
-    desc->type = type ? strdup(type) : NULL;
-    desc->family = family ? strdup(family) : strdup(HISVG_DEFAULT_FONT_FAMILY);
-    desc->style = style;
     desc->variant = variant;
-    desc->weight = weight;
     desc->stretch = stretch;
-    desc->size = size;
-    desc->size_is_absolute = size_is_absolute;
+
+    switch (weight)
+    {
+        case HISVG_TEXT_WEIGHT_THIN:
+            log_font_style[0] = FONT_WEIGHT_THIN;
+            break;
+        case HISVG_TEXT_WEIGHT_ULTRALIGHT:
+            log_font_style[0] = FONT_WEIGHT_EXTRA_LIGHT;
+            break;
+        case HISVG_TEXT_WEIGHT_LIGHT:
+        case HISVG_TEXT_WEIGHT_SEMILIGHT:
+        case HISVG_TEXT_WEIGHT_BOOK:
+            log_font_style[0] = FONT_WEIGHT_LIGHT;
+            break;
+        case HISVG_TEXT_WEIGHT_NORMAL:
+            log_font_style[0] = FONT_WEIGHT_NORMAL;
+            break;
+        case HISVG_TEXT_WEIGHT_MEDIUM:
+            log_font_style[0] = FONT_WEIGHT_MEDIUM;
+            break;
+        case HISVG_TEXT_WEIGHT_SEMIBOLD:
+            log_font_style[0] = FONT_WEIGHT_DEMIBOLD;
+            break;
+        case HISVG_TEXT_WEIGHT_BOLD:
+            log_font_style[0] = FONT_WEIGHT_BOLD;
+            break;
+        case HISVG_TEXT_WEIGHT_ULTRABOLD:
+            log_font_style[0] = FONT_WEIGHT_EXTRA_BOLD;
+            break;
+        case HISVG_TEXT_WEIGHT_HEAVY:
+        case HISVG_TEXT_WEIGHT_ULTRAHEAVY:
+            log_font_style[0] = FONT_WEIGHT_BLACK;
+            break;
+        default:
+            log_font_style[0] = FONT_WEIGHT_BLACK;
+            break;
+    }
+
+    switch(style)
+    {
+        case HISVG_TEXT_STYLE_NORMAL:
+            log_font_style[1] = FONT_SLANT_ROMAN;
+            break;
+        case HISVG_TEXT_STYLE_OBLIQUE:
+            log_font_style[1] = FONT_SLANT_OBLIQUE;
+            break;
+        case HISVG_TEXT_STYLE_ITALIC:
+            log_font_style[1] = FONT_SLANT_ITALIC;
+            break;
+        default:
+            log_font_style[1] = FONT_SLANT_ROMAN;
+            break;
+    }
+
+    log_font_style[2] = FONT_FLIP_NONE;
+    log_font_style[3] = 'c';
+    log_font_style[4] = 'n';
+    log_font_style[5] = 'n';
+    log_font_style[6] = 0;
+
+    // <fonttype>-<family[,aliase]*>-<styles>-<width>-<height>-<charset[,charset]*>
+    snprintf(desc->log_font, 255, "%s-%s-%s-%d-%d-ISO8859-1,UTF-8",
+            type ? type : "ttf",
+            family ? family : HISVG_DEFAULT_FONT_FAMILY,
+            log_font_style,
+            size,
+            size);
     return desc;
 }
 
 void hisvg_font_description_destroy (HiSVGFontDescription* desc)
 {
-    free(desc->type);
-    free(desc->family);
     free(desc);
 }
 

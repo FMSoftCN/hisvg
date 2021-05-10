@@ -154,17 +154,10 @@ typedef enum {
 
 
 typedef struct _HiSVGFontDescription {
-    char* type;
-    char* family;
-
-    HiSVGTextStyle style;
     HiSVGTextVariant variant;
-    HiSVGTextWeight weight;
     HiSVGTextStretch stretch;
-    HiSVGTextGravity gravity;
 
-    guint size_is_absolute : 1;
-    int size;
+    char log_font[256];
 } HiSVGFontDescription;
 
 typedef struct _HiSVGTextContext {
@@ -202,8 +195,7 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
-        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size,
-        guint size_is_absolute
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size
         );
 void hisvg_font_description_destroy (HiSVGFontDescription* desc);
 
