@@ -397,7 +397,6 @@ hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx)
 
     context = hisvg_create_text_context ();
     hisvg_cairo_update_text_context (render->cr, context);
-    hisvg_text_context_set_resolution (context, ctx->dpi_y);
     return context;
 }
 

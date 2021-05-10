@@ -546,6 +546,9 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGTextAttrList *attr_list;
     HiSVGTextAttribute *attribute;
 
+    fprintf(stderr, "############################# %s:%d:%s create layout context =%p|dpi_y=%f\n", __FILE__, __LINE__, __func__, context, ctx->dpi_y);
+    hisvg_text_context_set_resolution (context, ctx->dpi_y);
+
     if (state->lang)
         hisvg_text_context_set_language (context, state->lang);
 
