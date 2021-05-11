@@ -416,11 +416,10 @@ hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx, HiSVGState * state)
 void
 hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 {
-    fprintf(stderr, "########################################### render_text x=%f|y=%f\n", x, y);
     HiSVGTextContextLayout* layout = lyt;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
     HiSVGState *state = hisvg_current_state (ctx);
-    HiSVGTextRectangle ink;
+    HiSVGTextRectangle rect;
     HiSVGBbox bbox;
     HiSVGTextGravity gravity = hisvg_text_context_get_gravity (hisvg_text_layout_get_context (layout));
     double rotation;
@@ -429,19 +428,19 @@ hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 
     _set_hisvg_affine (render, &state->affine);
 
-    hisvg_text_context_layout_get_extents (layout, &ink, NULL);
+    hisvg_text_context_layout_get_rect (layout, &rect);
 
     hisvg_bbox_init (&bbox, &state->affine);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (gravity)) {
-        bbox.rect.x = x + (ink.x - ink.height) / (double)HISVG_TEXT_SCALE;
-        bbox.rect.y = y + ink.y / (double)HISVG_TEXT_SCALE;
-        bbox.rect.width = ink.height / (double)HISVG_TEXT_SCALE;
-        bbox.rect.height = ink.width / (double)HISVG_TEXT_SCALE;
+        bbox.rect.x = x + (rect.x - rect.height) / (double)HISVG_TEXT_SCALE;
+        bbox.rect.y = y + rect.y / (double)HISVG_TEXT_SCALE;
+        bbox.rect.width = rect.height / (double)HISVG_TEXT_SCALE;
+        bbox.rect.height = rect.width / (double)HISVG_TEXT_SCALE;
     } else {
-        bbox.rect.x = x + ink.x / (double)HISVG_TEXT_SCALE;
-        bbox.rect.y = y + ink.y / (double)HISVG_TEXT_SCALE;
-        bbox.rect.width = ink.width / (double)HISVG_TEXT_SCALE;
-        bbox.rect.height = ink.height / (double)HISVG_TEXT_SCALE;
+        bbox.rect.x = x + rect.x / (double)HISVG_TEXT_SCALE;
+        bbox.rect.y = y + rect.y / (double)HISVG_TEXT_SCALE;
+        bbox.rect.width = rect.width / (double)HISVG_TEXT_SCALE;
+        bbox.rect.height = rect.height / (double)HISVG_TEXT_SCALE;
     }
     bbox.virgin = 0;
 

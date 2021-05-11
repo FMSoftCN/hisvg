@@ -211,53 +211,22 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     LAYOUT* layout = CreateLayout(tr, context->gravity | writing_mode,
         bos, TRUE, max_line_extent, 0, letter_spacing, letter_spacing, 4, NULL, 0);
 
-    fprintf(stderr, "################################## letter_spacing=%d|font_name=%s|tr=%p|layout=%p\n", letter_spacing, desc->log_font, tr, layout);
-    LAYOUTLINE* line = NULL;
-    //while ((line = LayoutNextLine(layout, line, 0, FALSE, glyph_layout_cb, 0))) {
-    int x = 0;
-    int y = 0;
-    RECT rc;
-    while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0))) {
-#if 0
-        SIZE size;
-        GetLayoutLineSize(line, &size);
-        GetLayoutLineRect(line, &x, &y, 0, &rc);
-        fprintf(stderr, "################################## line %p|size=(%d,%d)\n", line, size.cx, size.cy);
-        fprintf(stderr, "################################## line %p|size=(%d,%d)|x=%d|y=%d|w=%d|h=%d\n", line, size.cx, size.cy, rc.left, rc.top, RECTW(rc), RECTH(rc));
-#endif
-    }
-
-    HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
-    result->context = context;
-    result->layout = layout;
-    result->writing_mode = writing_mode;
-
-    return result;
-}
-
-void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
-{
-    free(layout);
-}
-
-void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
-{
-    if (layout == NULL || layout->layout == NULL)
-    {
-        return;
-    }
-
     int w = 0;
     int h = 0;
     LAYOUTLINE* line = NULL;
-    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, NULL, 0)))
+    int32_t baseline = -1;
+    while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0))) 
     {
         SIZE size;
         GetLayoutLineSize(line, &size);
+        if (baseline == -1)
+        {
+            baseline = size.cy;
+        }
         size.cx += 5;
         size.cy += 5;
 
-        switch (layout->writing_mode) {
+        switch (writing_mode) {
             case GRF_WRITING_MODE_HORIZONTAL_TB:
             case GRF_WRITING_MODE_HORIZONTAL_BT:
                 w = w < size.cx ? size.cx : w;
@@ -272,14 +241,43 @@ void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* wi
         }
     }
 
+    HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
+    result->context = context;
+    result->layout = layout;
+    result->writing_mode = writing_mode;
+
+    result->rect = (HiSVGTextRectangle*) calloc(1, sizeof(HiSVGTextRectangle));
+    result->rect->x = 0;
+    result->rect->y = 0;
+    result->rect->width = w;
+    result->rect->height = h;
+
+    result->baseline = baseline;
+    return result;
+}
+
+void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
+{
+    free(layout->rect);
+    DestroyLayout(layout->layout);
+    free(layout);
+}
+
+void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
+{
+    if (layout == NULL || layout->layout == NULL)
+    {
+        return;
+    }
+
     if (width)
     {
-        *width = w;
+        *width = layout->rect->width;
     }
 
     if (height)
     {
-        *height = h;
+        *height = layout->rect->height;
     }
 }
 
@@ -290,16 +288,7 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
         return 0;
     }
 
-    int w = 0;
-    int h = 0;
-    LAYOUTLINE* line = NULL;
-    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, NULL, 0)))
-    {
-        SIZE size;
-        GetLayoutLineSize(line, &size);
-        return size.cy;
-    }
-    return 0;
+    return layout->baseline;
 }
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
@@ -409,27 +398,15 @@ HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)
     return layout->context;
 }
 
-void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect)
+void hisvg_text_context_layout_get_rect (HiSVGTextContextLayout* layout, HiSVGTextRectangle* rect)
 {
-#if 0
-    PangoRectangle irect, lrect;
-    pango_layout_get_extents (layout->pango_layout, &irect, &lrect);
-    if (ink_rect)
+    if (rect && layout->rect)
     {
-        ink_rect->x = irect.x;
-        ink_rect->y = irect.y;
-        ink_rect->width = irect.width;
-        ink_rect->height = irect.height;
+        rect->x = layout->rect->x;
+        rect->y = layout->rect->y;
+        rect->width = layout->rect->width;
+        rect->height = layout->rect->height;
     }
-
-    if (logical_rect)
-    {
-        logical_rect->x = lrect.x;
-        logical_rect->y = lrect.y;
-        logical_rect->width = lrect.width;
-        logical_rect->height = lrect.height;
-    }
-#endif
 }
 
 double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)

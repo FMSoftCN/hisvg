@@ -166,18 +166,20 @@ typedef struct _HiSVGTextContext {
     uint32_t gravity;
 } HiSVGTextContext;
 
-typedef struct _HiSVGTextContextLayout {
-    HiSVGTextContext* context;
-    uint32_t writing_mode;
-    LAYOUT* layout;
-} HiSVGTextContextLayout;
-
 typedef struct _HiSVGTextRectangle {
     int x;
     int y;
     int width;
     int height;
 } HiSVGTextRectangle;
+
+typedef struct _HiSVGTextContextLayout {
+    HiSVGTextContext* context;
+    uint32_t writing_mode;
+    LAYOUT* layout;
+    HiSVGTextRectangle* rect;
+    int32_t baseline;
+} HiSVGTextContextLayout;
 
 HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity);
 void hisvg_text_context_destroy (HiSVGTextContext* context);
@@ -190,7 +192,7 @@ void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout);
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout);
-void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect);
+void hisvg_text_context_layout_get_rect (HiSVGTextContextLayout* layout, HiSVGTextRectangle* rect);
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
