@@ -45,7 +45,7 @@
  \endverbatim
  */
 
-#include <pango/pangocairo.h>
+#include <glib.h>
 #include "hisvg-text-helper.h"
 
 #define HISVG_DEFAULT_FONT_TYPE "ttf"
@@ -305,7 +305,7 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
         HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
-        gint size)
+        uint32_t size)
 {
     char log_font_style[7] = {0};
     HiSVGFontDescription* desc = (HiSVGFontDescription*) calloc(1, sizeof(HiSVGFontDescription));

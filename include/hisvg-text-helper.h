@@ -49,7 +49,6 @@
 #define _HI_SVG_TEXT_HELPER_H_
 
 #include <cairo.h>
-#include <pango/pangocairo.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>
@@ -197,7 +196,7 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
         HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
-        gint size
+        uint32_t size
         );
 void hisvg_font_description_destroy (HiSVGFontDescription* desc);
 

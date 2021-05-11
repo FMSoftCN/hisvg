@@ -6,7 +6,6 @@ find_package(GLIB 2.40.0 REQUIRED COMPONENTS gio gio-unix gobject gthread gmodul
 find_package(HiDomLayout REQUIRED)
 find_package(hicairo REQUIRED)
 find_package(LibXml2 REQUIRED)
-find_package(Pango REQUIRED)
 find_package(MiniGUI 5.0.2 REQUIRED)
 
 set(MINIGUI_LIBRARIES ${MiniGUI_LIBRARIES})
