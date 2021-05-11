@@ -2370,7 +2370,6 @@ void _fill_select_css_computed(HLDomElementNode* node, void* user_data)
 void _hisvg_select_css_computed(HiSVGHandle* handle)
 {
     HiSVGNodeSvg *root = (HiSVGNodeSvg *) handle->priv->treebase;
-    fprintf(stderr, "%s:%d:%s width=%f|height=%f\n", __FILE__, __LINE__, __func__, root->vbox.rect.width, root->vbox.rect.height);
 
     HLMedia hl_media = {
         .width = root->vbox.rect.width,
@@ -2386,7 +2385,6 @@ void _hisvg_select_css_computed(HiSVGHandle* handle)
     hilayout_element_node_depth_first_search_tree(element_root, build_node_attribute_css, &attr_css);
     if (attr_css)
     {
-        fprintf(stderr, "%s:%d:%s width=%f|height=%f|attr_css=%s|attr_css_len=%ld\n", __FILE__, __LINE__, __func__, root->vbox.rect.width, root->vbox.rect.height, attr_css, strlen(attr_css));
         hilayout_css_append_data(css, attr_css, strlen(attr_css));
     }
     hilayout_css_append_data(css, handle->priv->css_buff, handle->priv->css_buff_len);
