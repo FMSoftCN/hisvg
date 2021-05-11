@@ -164,6 +164,7 @@ typedef struct _HiSVGTextContext {
     LanguageCode lang_code;
     ParagraphDir base_dir;
     uint32_t gravity;
+    cairo_t* cr;
 } HiSVGTextContext;
 
 typedef struct _HiSVGTextRectangle {

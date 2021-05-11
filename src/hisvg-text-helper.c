@@ -46,6 +46,7 @@
  */
 
 #include <glib.h>
+#include <cairo-ft.h>
 #include "hisvg-text-helper.h"
 
 #define HISVG_DEFAULT_FONT_TYPE "ttf"
@@ -144,24 +145,6 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
     }
 }
 
-BOOL glyph_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_pos, const RENDERDATA* render_data)
-{
-    GLYPHINFO info = {0};
-    info.mask = GLYPH_INFO_FACE;
-    int ret = GetGlyphInfo (render_data->logfont, glyph_value, &info);
-    if (ret != -1)
-    {
-        // paint
-        fprintf(stderr, "paint char glyph_value=0x%x\n", glyph_value);
-    }
-    else
-    {
-        // paint space
-        fprintf(stderr, "paint space char \n");
-    }
-    return TRUE;
-}
-
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
         int font_decor, uint32_t writing_mode, const char* text)
@@ -215,7 +198,7 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     int h = 0;
     LAYOUTLINE* line = NULL;
     int32_t baseline = -1;
-    while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0))) 
+    while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0)))
     {
         SIZE size;
         GetLayoutLineSize(line, &size);
@@ -427,12 +410,45 @@ double hisvg_text_gravity_to_rotation (HiSVGTextGravity gravity)
 
 void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)
 {
-//    pango_cairo_update_context (cr, context->pango_ctx);
+    context->cr = cr;
 }
+
+BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_pos, const RENDERDATA* render_data)
+{
+    cairo_t* cr = (cairo_t*) ctxt;
+    GLYPHINFO info = {0};
+    info.mask = GLYPH_INFO_FACE;
+    cairo_glyph_t glyph;
+    int ret = GetGlyphInfo (render_data->logfont, glyph_value, &info);
+    if (ret != -1)
+    {
+        glyph.index = info.index;
+        glyph.x = 0;
+        glyph.y = 0;
+        FT_Face ft_face = (FT_Face) info.ft_face;
+        cairo_font_face_t* cairo_font_face = cairo_ft_font_face_create_for_ft_face (ft_face, 0);
+        cairo_set_font_face(cr, cairo_font_face);
+        cairo_show_glyphs(cr, &glyph, 1);
+
+        // paint
+        fprintf(stderr, "paint char glyph_value=0x%x|cairo_font_face=%p\n", glyph_value, cairo_font_face);
+    }
+    else
+    {
+        // paint space
+        fprintf(stderr, "paint space char \n");
+    }
+    return TRUE;
+}
+
 
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-//    pango_cairo_show_layout(cr, layout->pango_layout);
+    LAYOUTLINE* line = NULL;
+    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, show_layout_cb, cr)))
+    {
+        fprintf(stderr, "############################# line %p\n", line);
+    }
 }
 
 void hisvg_cairo_layout_path (cairo_t* cr, HiSVGTextContextLayout* layout)
