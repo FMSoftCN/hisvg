@@ -229,6 +229,8 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     result->layout = layout;
     result->writing_mode = writing_mode;
 
+    result->font_size = desc->font_size;
+
     result->rect = (HiSVGTextRectangle*) calloc(1, sizeof(HiSVGTextRectangle));
     result->rect->x = 0;
     result->rect->y = 0;
@@ -277,12 +279,13 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
         HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
-        uint32_t size)
+        double size)
 {
     char log_font_style[7] = {0};
     HiSVGFontDescription* desc = (HiSVGFontDescription*) calloc(1, sizeof(HiSVGFontDescription));
     desc->variant = variant;
     desc->stretch = stretch;
+    desc->font_size = size;
 
     switch (weight)
     {
@@ -366,8 +369,8 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
             type ? type : HISVG_DEFAULT_FONT_TYPE,
             family ? family : HISVG_DEFAULT_FONT_FAMILY,
             log_font_style,
-            size,
-            size);
+            (int)size,
+            (int)size);
     return desc;
 }
 
@@ -413,45 +416,122 @@ void hisvg_cairo_update_text_context (cairo_t* cr, HiSVGTextContext* context)
     context->cr = cr;
 }
 
+typedef struct _HiSVGLayoutParam {
+    double x;
+    double y;
+    double font_size;
+    int32_t baseline;
+    cairo_t* cr;
+    uint32_t writing_mode;
+    void (*render) (cairo_t *cr, const cairo_glyph_t *glyphs, int num_glyphs);
+}  HiSVGLayoutParam;
+
+
 BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_pos, const RENDERDATA* render_data)
 {
-    cairo_t* cr = (cairo_t*) ctxt;
+    HiSVGLayoutParam* param = (HiSVGLayoutParam*) ctxt;
+    cairo_t* cr = param->cr;
+
     GLYPHINFO info = {0};
-    info.mask = GLYPH_INFO_FACE;
+    info.mask = GLYPH_INFO_FACE | GLYPH_INFO_METRICS;
     cairo_glyph_t glyph;
     int ret = GetGlyphInfo (render_data->logfont, glyph_value, &info);
     if (ret != -1)
     {
         glyph.index = info.index;
-        glyph.x = 0;
-        glyph.y = 0;
+        glyph.x = param->x;
+        glyph.y = param->y + param->baseline;
+
         FT_Face ft_face = (FT_Face) info.ft_face;
         cairo_font_face_t* cairo_font_face = cairo_ft_font_face_create_for_ft_face (ft_face, 0);
         cairo_set_font_face(cr, cairo_font_face);
-        cairo_show_glyphs(cr, &glyph, 1);
+        cairo_set_font_size(cr, param->font_size);
+        param->render(cr, &glyph, 1);
 
-        // paint
-        fprintf(stderr, "paint char glyph_value=0x%x|cairo_font_face=%p\n", glyph_value, cairo_font_face);
+        switch (param->writing_mode) {
+            case GRF_WRITING_MODE_HORIZONTAL_TB:
+            case GRF_WRITING_MODE_HORIZONTAL_BT:
+                param->x += info.bbox_w;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_RL:
+            case GRF_WRITING_MODE_VERTICAL_LR:
+                param->y += info.bbox_h;
+                break;
+        }
     }
     else
     {
-        // paint space
-        fprintf(stderr, "paint space char \n");
+        switch (param->writing_mode) {
+            case GRF_WRITING_MODE_HORIZONTAL_TB:
+            case GRF_WRITING_MODE_HORIZONTAL_BT:
+                param->x += param->font_size / 2;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_RL:
+            case GRF_WRITING_MODE_VERTICAL_LR:
+                param->y += param->font_size / 2;
+                break;
+        }
     }
     return TRUE;
+}
+
+void _hisvg_cairo_render_layout(cairo_t* cr, HiSVGTextContextLayout* layout, HiSVGLayoutParam* param)
+{
+    int x = 0;
+    int y = 0;
+    LAYOUTLINE* line = NULL;
+    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, show_layout_cb, param)))
+    {
+        RECT rc;
+        GetLayoutLineRect(line, &x, &y, 0, &rc);
+
+        switch (param->writing_mode) {
+        case GRF_WRITING_MODE_HORIZONTAL_TB:
+            y += 10;
+            break;
+
+        case GRF_WRITING_MODE_HORIZONTAL_BT:
+            y -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_RL:
+            x -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_LR:
+            x += 10;
+            break;
+        }
+        param->x = x;
+        param->y = y;
+    }
 }
 
 
 void hisvg_cairo_show_layout (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-    LAYOUTLINE* line = NULL;
-    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, show_layout_cb, cr)))
-    {
-        fprintf(stderr, "############################# line %p\n", line);
-    }
+    HiSVGLayoutParam param = {0};
+    param.x = 0.0;
+    param.y = 0.0;
+    param.cr = cr;
+    param.font_size = layout->font_size;
+    param.baseline = layout->baseline;
+    param.writing_mode = layout->writing_mode;
+    param.render = cairo_show_glyphs;
+    _hisvg_cairo_render_layout(cr, layout, &param);
 }
 
 void hisvg_cairo_layout_path (cairo_t* cr, HiSVGTextContextLayout* layout)
 {
-//    pango_cairo_layout_path(cr, layout->pango_layout);
+    HiSVGLayoutParam param = {0};
+    param.x = 0.0;
+    param.y = 0.0;
+    param.cr = cr;
+    param.font_size = layout->font_size;
+    param.baseline = layout->baseline;
+    param.writing_mode = layout->writing_mode;
+    param.render = cairo_glyph_path;
+    _hisvg_cairo_render_layout(cr, layout, &param);
 }

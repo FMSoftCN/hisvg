@@ -544,7 +544,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGFontDescription *font_desc;
     HiSVGTextContextLayout *layout;
 
-    int font_size = _hisvg_css_normalize_font_size (state, ctx) / ctx->dpi_y * 72;
+    double font_size = _hisvg_css_normalize_font_size (state, ctx) / ctx->dpi_y * 72;
 
     font_desc = hisvg_font_description_create(NULL, state->font_family,
             state->font_style, state->font_variant, state->font_weight,
@@ -601,7 +601,6 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     layout = hisvg_text_create_layout (ctx, state, text, context);
     hisvg_text_context_layout_get_size (layout, &w, &h);
     baseline = hisvg_text_context_layout_get_baseline(layout);
-    fprintf(stderr, "...............................................get size w=%d|h=%d|baseline=%d\n", w, h, baseline);
     offset = baseline / (double) HISVG_TEXT_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity)) {

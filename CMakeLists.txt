@@ -7,6 +7,7 @@ find_package(HiDomLayout REQUIRED)
 find_package(hicairo REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(MiniGUI 5.0.2 REQUIRED)
+find_package(Freetype REQUIRED)
 
 set(MINIGUI_LIBRARIES ${MiniGUI_LIBRARIES})
 set(MINIGUI_INCLUDE_DIRS ${MiniGUI_INCLUDE_DIRS})

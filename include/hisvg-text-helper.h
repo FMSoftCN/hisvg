@@ -157,6 +157,7 @@ typedef struct _HiSVGFontDescription {
     HiSVGTextStretch stretch;
 
     char log_font[256];
+    double font_size;
 } HiSVGFontDescription;
 
 typedef struct _HiSVGTextContext {
@@ -180,6 +181,7 @@ typedef struct _HiSVGTextContextLayout {
     LAYOUT* layout;
     HiSVGTextRectangle* rect;
     int32_t baseline;
+    double font_size;
 } HiSVGTextContextLayout;
 
 HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity);
@@ -199,7 +201,7 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
         HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
-        uint32_t size
+        double size
         );
 void hisvg_font_description_destroy (HiSVGFontDescription* desc);
 
