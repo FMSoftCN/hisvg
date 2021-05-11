@@ -231,6 +231,7 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     result->bos = bos;
     result->ucs = ucs;
     result->writing_mode = writing_mode;
+    result->lf = lf;
 
     result->font_size = desc->font_size;
 
@@ -251,6 +252,7 @@ void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
     DestroyLayout(layout->layout);
     free(layout->bos);
     free(layout->ucs);
+    DestroyLogFont(layout->lf);
     free(layout);
 }
 
