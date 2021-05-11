@@ -600,8 +600,8 @@ hisvg_text_render_text (HiSVGDrawingCtx * ctx, const char *text, gdouble * x, gd
     context = ctx->render->create_text_context (ctx, state);
     layout = hisvg_text_create_layout (ctx, state, text, context);
     hisvg_text_context_layout_get_size (layout, &w, &h);
-    fprintf(stderr, "...............................................get size w=%d|h=%d\n", w, h);
     baseline = hisvg_text_context_layout_get_baseline(layout);
+    fprintf(stderr, "...............................................get size w=%d|h=%d|baseline=%d\n", w, h, baseline);
     offset = baseline / (double) HISVG_TEXT_SCALE;
     offset += _hisvg_css_accumulate_baseline_shift (state, ctx);
     if (HISVG_TEXT_GRAVITY_IS_VERTICAL (state->text_gravity)) {

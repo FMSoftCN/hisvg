@@ -416,6 +416,7 @@ hisvg_cairo_create_text_context (HiSVGDrawingCtx * ctx, HiSVGState * state)
 void
 hisvg_cairo_render_text (HiSVGDrawingCtx * ctx, void* lyt, double x, double y)
 {
+    fprintf(stderr, "########################################### render_text x=%f|y=%f\n", x, y);
     HiSVGTextContextLayout* layout = lyt;
     HiSVGCairoRender *render = HISVG_CAIRO_RENDER (ctx->render);
     HiSVGState *state = hisvg_current_state (ctx);

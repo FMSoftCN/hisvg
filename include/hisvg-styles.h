@@ -64,7 +64,7 @@ typedef int TextDecoration;
 #define HISVG_TEXT_GRAVITY_IS_VERTICAL(gravity) \
     ((gravity) == HISVG_TEXT_GRAVITY_EAST || (gravity) == HISVG_TEXT_GRAVITY_WEST)
 
-#define HISVG_TEXT_SCALE 1024
+#define HISVG_TEXT_SCALE 1 //1024
 
 /* enums and data structures are ABI compatible with libart */
 

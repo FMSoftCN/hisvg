@@ -285,7 +285,21 @@ void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* wi
 
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 {
-//    return pango_layout_get_baseline(layout->pango_layout);
+    if (layout == NULL || layout->layout == NULL)
+    {
+        return 0;
+    }
+
+    int w = 0;
+    int h = 0;
+    LAYOUTLINE* line = NULL;
+    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, NULL, 0)))
+    {
+        SIZE size;
+        GetLayoutLineSize(line, &size);
+        return size.cy;
+    }
+    return 0;
 }
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
