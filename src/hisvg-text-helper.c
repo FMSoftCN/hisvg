@@ -447,6 +447,7 @@ BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_po
         cairo_set_font_face(cr, cairo_font_face);
         cairo_set_font_size(cr, param->font_size);
         param->render(cr, &glyph, 1);
+        cairo_font_face_destroy(cairo_font_face);
 
         switch (param->writing_mode) {
             case GRF_WRITING_MODE_HORIZONTAL_TB:
