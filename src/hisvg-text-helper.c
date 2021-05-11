@@ -227,6 +227,9 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
     HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
     result->context = context;
     result->layout = layout;
+    result->tr = tr;
+    result->bos = bos;
+    result->ucs = ucs;
     result->writing_mode = writing_mode;
 
     result->font_size = desc->font_size;
@@ -244,7 +247,10 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
 void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
 {
     free(layout->rect);
+    DestroyTextRuns(layout->tr);
     DestroyLayout(layout->layout);
+    free(layout->bos);
+    free(layout->ucs);
     free(layout);
 }
 

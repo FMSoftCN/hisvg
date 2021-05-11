@@ -179,6 +179,10 @@ typedef struct _HiSVGTextContextLayout {
     HiSVGTextContext* context;
     uint32_t writing_mode;
     LAYOUT* layout;
+    TEXTRUNS* tr;
+    BreakOppo* bos;
+    Uchar32* ucs;
+
     HiSVGTextRectangle* rect;
     int32_t baseline;
     double font_size;
