@@ -171,6 +171,7 @@ hisvg_state_init (HiSVGState * state)
     state->unicode_bidi = UNICODE_BIDI_NORMAL;
     state->text_anchor = TEXT_ANCHOR_START;
     state->letter_spacing = _hisvg_css_parse_length ("0.0");
+    state->writing_mode = GRF_WRITING_MODE_HORIZONTAL_TB;
     state->visible = TRUE;
     state->cond_true = TRUE;
     state->filter = NULL;

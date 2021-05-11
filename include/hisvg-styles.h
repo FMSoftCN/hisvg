@@ -142,6 +142,7 @@ struct _HiSVGState {
     gboolean has_text_anchor;
     HiSVGLength letter_spacing;
     gboolean has_letter_spacing;
+    guint32 writing_mode;
 
     guint text_offset;
 

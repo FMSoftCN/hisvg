@@ -1023,24 +1023,28 @@ int32_t css_select_writing_mode (HiSVGHandle* handle, HiSVGNode* node, HiSVGStat
             state->has_text_dir = FALSE;
             state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
             state->has_text_gravity = FALSE;
+            state->writing_mode = GRF_WRITING_MODE_HORIZONTAL_TB;
             break;
         case HL_WRITING_MODE_HORIZONTAL_TB:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
             state->text_dir = HISVG_TEXT_DIRECTION_LTR;
             state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
+            state->writing_mode = GRF_WRITING_MODE_HORIZONTAL_TB;
             break;
         case HL_WRITING_MODE_VERTICAL_RL:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
             state->text_dir = HISVG_TEXT_DIRECTION_LTR;
             state->text_gravity = HISVG_TEXT_GRAVITY_EAST;
+            state->writing_mode = GRF_WRITING_MODE_VERTICAL_RL;
             break;
         case HL_WRITING_MODE_VERTICAL_LR:
             state->has_text_dir = TRUE;
             state->has_text_gravity = TRUE;
             state->text_dir = HISVG_TEXT_DIRECTION_LTR;
-            state->text_gravity = HISVG_TEXT_GRAVITY_SOUTH;
+            state->text_gravity = HISVG_TEXT_GRAVITY_WEST;
+            state->writing_mode = GRF_WRITING_MODE_VERTICAL_LR;
             break;
     }
     return 0;

@@ -168,8 +168,8 @@ typedef struct _HiSVGTextContext {
 } HiSVGTextContext;
 
 typedef struct _HiSVGTextContextLayout {
-    struct _PangoLayout* pango_layout;
     HiSVGTextContext* context;
+    uint32_t writing_mode;
     LAYOUT* layout;
 } HiSVGTextContextLayout;
 
@@ -186,7 +186,7 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context);
 
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
-        int font_decoration, const char* text);
+        int font_decoration, uint32_t writing_mode, const char* text);
 void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout);
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height);

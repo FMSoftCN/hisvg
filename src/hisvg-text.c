@@ -544,7 +544,6 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGFontDescription *font_desc;
     HiSVGTextContextLayout *layout;
 
-    fprintf(stderr, "############################# %s:%d:%s create layout context =%p|dpi_y=%f\n", __FILE__, __LINE__, __func__, context, ctx->dpi_y);
     int font_size = _hisvg_css_normalize_font_size (state, ctx) / ctx->dpi_y * 72;
 
     font_desc = hisvg_font_description_create(NULL, state->font_family,
@@ -556,7 +555,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
     HiSVGTextAlignment alignment = (state->text_dir == HISVG_TEXT_DIRECTION_LTR) ?
         HISVG_TEXT_ALIGN_LEFT : HISVG_TEXT_ALIGN_RIGHT;
     layout = hisvg_text_context_layout_create (context, 
-        letter_spacing, alignment, font_desc, state->font_decor, text);
+        letter_spacing, alignment, font_desc, state->font_decor, state->writing_mode, text);
 
     hisvg_font_description_destroy (font_desc);
 

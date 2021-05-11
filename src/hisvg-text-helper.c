@@ -80,7 +80,7 @@ HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, H
                 ctx->base_dir = BIDI_PGDIR_WRTL;
                 break;
             case HISVG_TEXT_DIRECTION_NEUTRAL:
-                ctx->base_dir = BIDI_TYPE_ON;
+                ctx->base_dir = BIDI_PGDIR_ON;
                 break;
         }
     }
@@ -144,66 +144,27 @@ HiSVGTextGravity hisvg_text_context_get_gravity (HiSVGTextContext* context)
     }
 }
 
-#if 0
-HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
-        int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
-        int font_decor, const char* text)
+BOOL glyph_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_pos, const RENDERDATA* render_data)
 {
-    PangoLayout* layout = pango_layout_new (context->pango_ctx);
-    HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
-    result->pango_layout = layout;
-    result->context = context;
-    PangoAttrList* attr_list;
-    PangoAttribute* attribute;
-
-    // set font description
-    PangoFontDescription* pdesc = pango_font_description_new();
-    pango_font_description_set_family_static(pdesc, desc->family);
-    pango_font_description_set_style(pdesc, desc->style);
-    pango_font_description_set_variant(pdesc, desc->variant);
-    pango_font_description_set_weight(pdesc, desc->weight);
-    pango_font_description_set_stretch(pdesc, desc->stretch);
-    pango_font_description_set_size(pdesc, desc->size);
-    pango_layout_set_font_description (layout, pdesc);
-    pango_font_description_free(pdesc);
-
-    attr_list = pango_attr_list_new ();
-    attribute = pango_attr_letter_spacing_new (letter_spacing);
-    attribute->start_index = 0;
-    attribute->end_index = G_MAXINT;
-    pango_attr_list_insert (attr_list, attribute);
-    if (text)
+    GLYPHINFO info = {0};
+    info.mask = GLYPH_INFO_FACE;
+    int ret = GetGlyphInfo (render_data->logfont, glyph_value, &info);
+    if (ret != -1)
     {
-        if (font_decor & TEXT_UNDERLINE) {
-            attribute = pango_attr_underline_new (HISVG_TEXT_UNDERLINE_SINGLE);
-            attribute->start_index = 0;
-            attribute->end_index = -1;
-            pango_attr_list_insert (attr_list, attribute);
-        }
-        if (font_decor & TEXT_STRIKE) {
-            attribute = pango_attr_strikethrough_new (TRUE);
-            attribute->start_index = 0;
-            attribute->end_index = -1;
-            pango_attr_list_insert (attr_list, attribute);
-        }
+        // paint
+        fprintf(stderr, "paint char glyph_value=0x%x\n", glyph_value);
     }
-
-    pango_layout_set_attributes (layout, attr_list);
-    pango_attr_list_unref (attr_list);
-
-    if (text)
-        pango_layout_set_text (layout, text, -1);
     else
-        pango_layout_set_text (layout, NULL, 0);
-
-    pango_layout_set_alignment (layout, alignment);
-
-    return result;
+    {
+        // paint space
+        fprintf(stderr, "paint space char \n");
+    }
+    return TRUE;
 }
-#else
+
 HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* context,
         int letter_spacing, HiSVGTextAlignment alignment, const HiSVGFontDescription* desc,
-        int font_decor, const char* text)
+        int font_decor, uint32_t writing_mode, const char* text)
 {
     PLOGFONT lf = NULL;
     if (text == NULL || strlen(text) == 0)
@@ -247,32 +208,79 @@ HiSVGTextContextLayout* hisvg_text_context_layout_create (HiSVGTextContext* cont
         fprintf(stderr, "%s: UStrGetBreaks failed\n", __FUNCTION__);
         return NULL;
     }
-    LAYOUT* layout = CreateLayout(tr, GLYPH_GRAVITY_SOUTH,
+    LAYOUT* layout = CreateLayout(tr, context->gravity | writing_mode,
         bos, TRUE, max_line_extent, 0, letter_spacing, letter_spacing, 4, NULL, 0);
 
     fprintf(stderr, "################################## letter_spacing=%d|font_name=%s|tr=%p|layout=%p\n", letter_spacing, desc->log_font, tr, layout);
     LAYOUTLINE* line = NULL;
+    //while ((line = LayoutNextLine(layout, line, 0, FALSE, glyph_layout_cb, 0))) {
+    int x = 0;
+    int y = 0;
+    RECT rc;
     while ((line = LayoutNextLine(layout, line, 0, FALSE, NULL, 0))) {
-        fprintf(stderr, "line = %p\n", line);
+#if 0
+        SIZE size;
+        GetLayoutLineSize(line, &size);
+        GetLayoutLineRect(line, &x, &y, 0, &rc);
+        fprintf(stderr, "################################## line %p|size=(%d,%d)\n", line, size.cx, size.cy);
+        fprintf(stderr, "################################## line %p|size=(%d,%d)|x=%d|y=%d|w=%d|h=%d\n", line, size.cx, size.cy, rc.left, rc.top, RECTW(rc), RECTH(rc));
+#endif
     }
 
     HiSVGTextContextLayout* result = (HiSVGTextContextLayout*)calloc(1, sizeof(HiSVGTextContextLayout));
     result->context = context;
     result->layout = layout;
+    result->writing_mode = writing_mode;
 
     return result;
 }
-#endif
 
 void hisvg_text_context_layout_destroy(HiSVGTextContextLayout* layout)
 {
-    //g_object_unref (layout->pango_layout);
     free(layout);
 }
 
 void hisvg_text_context_layout_get_size (HiSVGTextContextLayout* layout, int* width, int* height)
 {
-    //pango_layout_get_size (layout->pango_layout, width, height);
+    if (layout == NULL || layout->layout == NULL)
+    {
+        return;
+    }
+
+    int w = 0;
+    int h = 0;
+    LAYOUTLINE* line = NULL;
+    while ((line = LayoutNextLine(layout->layout, line, 0, FALSE, NULL, 0)))
+    {
+        SIZE size;
+        GetLayoutLineSize(line, &size);
+        size.cx += 5;
+        size.cy += 5;
+
+        switch (layout->writing_mode) {
+            case GRF_WRITING_MODE_HORIZONTAL_TB:
+            case GRF_WRITING_MODE_HORIZONTAL_BT:
+                w = w < size.cx ? size.cx : w;
+                h += size.cy + 10;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_RL:
+            case GRF_WRITING_MODE_VERTICAL_LR:
+                w += size.cx + 10;
+                h = h < size.cx ? size.cx : h;
+                break;
+        }
+    }
+
+    if (width)
+    {
+        *width = w;
+    }
+
+    if (height)
+    {
+        *height = h;
+    }
 }
 
 int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
@@ -384,8 +392,7 @@ void hisvg_font_description_destroy (HiSVGFontDescription* desc)
 
 HiSVGTextContext* hisvg_text_layout_get_context (HiSVGTextContextLayout* layout)
 {
-//    return layout->context;
-    return NULL;
+    return layout->context;
 }
 
 void hisvg_text_context_layout_get_extents (HiSVGTextContextLayout* layout, HiSVGTextRectangle* ink_rect, HiSVGTextRectangle* logical_rect)
