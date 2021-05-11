@@ -549,7 +549,7 @@ hisvg_text_create_layout (HiSVGDrawingCtx * ctx,
 
     font_desc = hisvg_font_description_create(NULL, state->font_family,
             state->font_style, state->font_variant, state->font_weight,
-            state->font_stretch, font_size);
+            state->font_stretch, state->font_decor, font_size);
 
     int letter_spacing = _hisvg_css_normalize_length (&state->letter_spacing, 
             ctx, 'h') * HISVG_TEXT_SCALE;

@@ -48,6 +48,7 @@
 #include <pango/pangocairo.h>
 #include "hisvg-text-helper.h"
 
+#define HISVG_DEFAULT_FONT_TYPE "ttf"
 #define HISVG_DEFAULT_FONT_FAMILY "serif"
 
 HiSVGTextContext* hisvg_text_context_create (double dpi, const char* language, HiSVGTextDirection* direction, HiSVGTextGravity* gravity)
@@ -281,7 +282,8 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout)
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
-        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size)
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
+        gint size)
 {
     char log_font_style[7] = {0};
     HiSVGFontDescription* desc = (HiSVGFontDescription*) calloc(1, sizeof(HiSVGFontDescription));
@@ -342,14 +344,32 @@ HiSVGFontDescription* hisvg_font_description_create (const char* type,
     }
 
     log_font_style[2] = FONT_FLIP_NONE;
-    log_font_style[3] = 'c';
-    log_font_style[4] = 'n';
-    log_font_style[5] = 'n';
+    log_font_style[3] = FONT_OTHER_TTFNOCACHE;
+
+    uint8_t has_underline = (font_decoration & TEXT_UNDERLINE);
+    uint8_t has_strike = (font_decoration & TEXT_STRIKE);
+    if (has_underline && has_strike)
+    {
+        log_font_style[4] = FONT_DECORATE_US;
+    }
+    else if (has_underline)
+    {
+        log_font_style[4] = FONT_DECORATE_UNDERLINE;
+    }
+    else if (has_strike)
+    {
+        log_font_style[4] = FONT_DECORATE_STRUCKOUT;
+    }
+    else
+    {
+        log_font_style[4] = FONT_DECORATE_NONE;
+    }
+    log_font_style[5] = FONT_RENDER_SUBPIXEL;
     log_font_style[6] = 0;
 
     // <fonttype>-<family[,aliase]*>-<styles>-<width>-<height>-<charset[,charset]*>
     snprintf(desc->log_font, 255, "%s-%s-%s-%d-%d-UTF-8",
-            type ? type : "ttf",
+            type ? type : HISVG_DEFAULT_FONT_TYPE,
             family ? family : HISVG_DEFAULT_FONT_FAMILY,
             log_font_style,
             size,

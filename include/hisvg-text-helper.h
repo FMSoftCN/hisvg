@@ -196,7 +196,8 @@ int hisvg_text_context_layout_get_baseline (HiSVGTextContextLayout* layout);
 
 HiSVGFontDescription* hisvg_font_description_create (const char* type,
         const char* family, HiSVGTextStyle style, HiSVGTextVariant variant,
-        HiSVGTextWeight weight, HiSVGTextStretch stretch, gint size
+        HiSVGTextWeight weight, HiSVGTextStretch stretch, int font_decoration,
+        gint size
         );
 void hisvg_font_description_destroy (HiSVGFontDescription* desc);
 
