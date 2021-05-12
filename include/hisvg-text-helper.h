@@ -182,6 +182,7 @@ typedef struct _HiSVGTextContextLayout {
     TEXTRUNS* tr;
     BreakOppo* bos;
     Uchar32* ucs;
+    PLOGFONT lf;
 
     HiSVGTextRectangle* rect;
     int32_t baseline;

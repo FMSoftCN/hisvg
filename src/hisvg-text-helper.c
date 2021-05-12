@@ -438,6 +438,7 @@ typedef struct _HiSVGLayoutParam {
 BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_pos, const RENDERDATA* render_data)
 {
     HiSVGLayoutParam* param = (HiSVGLayoutParam*) ctxt;
+    double space_size = param->font_size / 3;
     cairo_t* cr = param->cr;
 
     GLYPHINFO info = {0};
@@ -460,12 +461,12 @@ BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_po
         switch (param->writing_mode) {
             case GRF_WRITING_MODE_HORIZONTAL_TB:
             case GRF_WRITING_MODE_HORIZONTAL_BT:
-                param->x += info.bbox_w;
+                param->x += info.advance_x;
                 break;
 
             case GRF_WRITING_MODE_VERTICAL_RL:
             case GRF_WRITING_MODE_VERTICAL_LR:
-                param->y += info.bbox_h;
+                param->y += info.advance_y;
                 break;
         }
     }
@@ -474,12 +475,12 @@ BOOL show_layout_cb (GHANDLE ctxt, Glyph32 glyph_value, const GLYPHPOS* glyph_po
         switch (param->writing_mode) {
             case GRF_WRITING_MODE_HORIZONTAL_TB:
             case GRF_WRITING_MODE_HORIZONTAL_BT:
-                param->x += param->font_size / 2;
+                param->x += space_size;
                 break;
 
             case GRF_WRITING_MODE_VERTICAL_RL:
             case GRF_WRITING_MODE_VERTICAL_LR:
-                param->y += param->font_size / 2;
+                param->y += space_size;
                 break;
         }
     }
