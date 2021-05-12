@@ -2,13 +2,22 @@
 
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
-- [Building hiSVG](#building-hisvg)
+- [Building](#building)
 - [Usage](#usage)
 - [Copying](#copying)
 
 ## Introduction
 
-hiSVG is a  high performance SVG rendering library.
+hiSVG is a high performance SVG rendering library. It is derived form librsvg of GNOME Project.
+
+We have made the following changes :
+
+* We changed prefix from rsvg to hisvg.
+* We replaced Pango by MiniGUI. It is used for layout svg text node.
+* We replaced libcroco by hiDomLayout. It is used for parse css and layout svg node.
+* We replaced Cairo by hiCairo. hiCairo is derived form Cairo.
+* We removed gdk-pixbuf support.
+
 
 ## Dependencies
 
@@ -16,12 +25,12 @@ hiSVG depends on the following libraries:
 
 - [GLib](https://developer.gnome.org/glib/stable/)
 - [libXML2](http://www.xmlsoft.org/)
-- [pango](https://pango.gnome.org/)
+- [MiniGUI](https://gitlab.fmsoft.cn/VincentWei/minigui/)
 - [hiCairo](https://gitlab.fmsoft.cn/hybridos/hicairo/)
 - [hiDomLayout](https://gitlab.fmsoft.cn/hybridos/hidomlayout/)
 
 
-## Building hiSVG
+## Building
 
 We recommend that you use a latest Linux distribution with long term support,
 for example, Ubuntu Linux LTS 18.04 or 20.04.
@@ -34,10 +43,8 @@ to install the following packages:
  * Dependent libraries (all are optional):
     * libglib2.0-dev
     * libxml2-dev
-    * libpango1.0-dev
-    * libcairo2-dev
 
-Then build hiDOMLayout follow the README.md of hiDomLayout.
+Then build MiniGUI, hiCairo and hiDOMLayout library. (Please follow the README files of these projects).
 
 hiSVG uses cmake to configure and build the project.
 
@@ -57,13 +64,13 @@ $ make install
 HiSVGHandle* hisvg_handle_new_from_file (const gchar* file_name, GError** error);
 ```
 
-* create cairo surface 
+* create surface
 
 ```
 cairo_surface_t* surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
 ```
 
-* render svg to cairo surface
+* render svg
 
 ```
 gboolean hisvg_handle_render_cairo (HiSVGHandle* handle, cairo_t* cr, const HiSVGRect* viewport, const char* id, GError** error);
