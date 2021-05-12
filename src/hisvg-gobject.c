@@ -170,6 +170,7 @@ hisvg_handle_class_init (HiSVGHandleClass * klass)
 void hisvg_handle_destroy (HiSVGHandle * handle)
 {
     g_object_unref (handle);
+    xmlCleanupParser ();
 }
 
 /**

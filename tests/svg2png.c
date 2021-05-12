@@ -14,7 +14,7 @@ int main (int argc, char* argv[])
         return -1;
     }
 
-    char* png_name = (char*)malloc(strlen(argv[1] + 5));
+    char* png_name = (char*)malloc(strlen(argv[1]) + 5);
     strcpy(png_name, argv[1]);
     strcat(png_name, ".png");
     fprintf(stderr, "in=%s|out=%s\n", argv[1], png_name);
