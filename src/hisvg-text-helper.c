@@ -496,24 +496,6 @@ void _hisvg_cairo_render_layout(cairo_t* cr, HiSVGTextContextLayout* layout, HiS
     {
         RECT rc;
         GetLayoutLineRect(line, &x, &y, 0, &rc);
-
-        switch (param->writing_mode) {
-        case GRF_WRITING_MODE_HORIZONTAL_TB:
-            y += 10;
-            break;
-
-        case GRF_WRITING_MODE_HORIZONTAL_BT:
-            y -= 10;
-            break;
-
-        case GRF_WRITING_MODE_VERTICAL_RL:
-            x -= 10;
-            break;
-
-        case GRF_WRITING_MODE_VERTICAL_LR:
-            x += 10;
-            break;
-        }
         param->x = x;
         param->y = y;
     }
