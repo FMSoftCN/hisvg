@@ -6,6 +6,6 @@ includedir=${prefix}/include
 Name: libhisvg
 Description: hisvg library
 Version: 0.1
-Requires: glib-2.0 gobject-2.0 gio-2.0 libxml-2.0 pango pangocairo hidomlayout hicairo
+Requires: glib-2.0 gobject-2.0 gio-2.0 libxml-2.0 minigui hidomlayout hicairo
 Libs: -L${libdir} -lhisvg
 Cflags: -I${includedir}
