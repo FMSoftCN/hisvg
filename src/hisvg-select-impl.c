@@ -247,7 +247,7 @@ int32_t css_select_fill (HiSVGHandle* handle, HiSVGNode* node, HiSVGState* state
             break;
         case HL_FILL_URI:
             state->has_fill_server = 1;
-            state->fill = hisvg_paint_server_iri (svg_value->fill_string);
+            state->fill = hisvg_paint_server_iri (strdup(svg_value->fill_string));
             hisvg_paint_server_unref (fill);
             break;
         case HL_FILL_CURRENT_COLOR:

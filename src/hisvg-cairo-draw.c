@@ -127,7 +127,7 @@ _set_source_hisvg_linear_gradient (HiSVGDrawingCtx * ctx,
     cairo_pattern_set_matrix (pattern, &matrix);
     cairo_pattern_set_extend (pattern, linear->spread);
 
-    _pattern_add_hisvg_color_stops (pattern, (HiSVGNode*)&linear, current_color_rgb, opacity);
+    _pattern_add_hisvg_color_stops (pattern, (HiSVGNode*)linear, current_color_rgb, opacity);
 
     cairo_set_source (cr, pattern);
     cairo_pattern_destroy (pattern);
@@ -173,7 +173,7 @@ _set_source_hisvg_radial_gradient (HiSVGDrawingCtx * ctx,
     cairo_pattern_set_matrix (pattern, &matrix);
     cairo_pattern_set_extend (pattern, radial->spread);
 
-    _pattern_add_hisvg_color_stops (pattern, (HiSVGNode*)&radial, current_color_rgb, opacity);
+    _pattern_add_hisvg_color_stops (pattern, (HiSVGNode*)radial, current_color_rgb, opacity);
 
     cairo_set_source (cr, pattern);
     cairo_pattern_destroy (pattern);
