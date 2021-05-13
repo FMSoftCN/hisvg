@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(hisvg)
+project(hisvg VERSION 1.0.0)
 
 add_definitions(-DHISVG_COMPILATION)
 
@@ -45,6 +45,7 @@ include_directories(${hisvg_INCLUDE_DIRECTORIES} ${GLIB_INCLUDE_DIRS} ${HIDOMLAY
     ${MINIGUI_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
 link_directories(${HIDOMLAYOUT_LIBRARY_DIRS})
 add_library(hisvg SHARED ${hisvg_SOURCES})
+set_target_properties(hisvg PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
 target_link_libraries(hisvg ${GLIB_LIBRARIES}  ${HIDOMLAYOUT_LIBRARIES} ${HICairo_LIBRARIES} ${LIBXML2_LIBRARY} ${MINIGUI_LIBRARIES} )
 
 configure_file(hisvg.pc.in hisvg.pc @ONLY)

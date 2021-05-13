@@ -24,6 +24,7 @@ hiacejs_run
 node_test
 *.pc
 .build
+*.so.*
 
 
 #log
