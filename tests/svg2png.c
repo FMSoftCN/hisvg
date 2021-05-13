@@ -6,8 +6,13 @@
 #include "hisvg.h"
 #include "hisvg-common.h"
 
+#include <minigui/common.h>
+#include <minigui/minigui.h>
+#include <minigui/gdi.h>
+#include <minigui/window.h>
 
-int main (int argc, char* argv[])
+
+int MiniGUIMain (int argc, const char* argv[])
 {
     if (argc < 2) {
         fprintf(stderr, "usage: svg2png name.svg\n");
