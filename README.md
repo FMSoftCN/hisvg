@@ -80,7 +80,7 @@ gboolean hisvg_handle_render_cairo (HiSVGHandle* handle, cairo_t* cr, const HiSV
 
 ## Copying
 
-Copyright (C) 2020 FMSoft <https://www.fmsoft.cn>
+Copyright (C) 2021 FMSoft <https://www.fmsoft.cn>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General License as published by
