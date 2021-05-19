@@ -75,13 +75,15 @@ int MiniGUIMain (int argc, const char* argv[])
     HiSVGDimensionData dimensions;
     GError *error = NULL;
 
+#if 0
     char file_buf[1024] = {0};
     FILE* fp = fopen(argv[1], "r");
     fread(file_buf, 1024, 1, fp);
     fclose(fp);
     HiSVGHandle* svg = hisvg_handle_new_from_data (file_buf, strlen(file_buf), &error);
-
-    //HiSVGHandle* svg = hisvg_handle_new_from_file (argv[1], &error);
+#else
+    HiSVGHandle* svg = hisvg_handle_new_from_file (argv[1], &error);
+#endif
 
     char id[100] = "#pp";
     HLDomElementNode* element = hisvg_handle_get_node(svg, id);
@@ -117,10 +119,12 @@ int MiniGUIMain (int argc, const char* argv[])
 //    hisvg_handle_render_cairo (svg, cr, NULL,  NULL, NULL);
     cairo_surface_write_to_png (surface, png_name);
 
+#if 1
     while(1)
     {
         sleep(5);
     }
+#endif
 
     cairo_surface_destroy (surface);
     cairo_destroy (cr);

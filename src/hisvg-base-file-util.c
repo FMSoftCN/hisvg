@@ -117,12 +117,16 @@ hisvg_handle_new_from_file (const gchar * file_name, GError ** error)
     data = _hisvg_io_acquire_data (file_name, base_uri, NULL, &data_len, NULL, error);
 
     if (data) {
+#if 0
         handle = hisvg_handle_new (HISVG_HANDLE_FLAGS_NONE);
         hisvg_handle_set_base_uri (handle, base_uri);
         if (!hisvg_handle_fill_with_data (handle, data, data_len, error)) {
             g_object_unref (handle);
             handle = NULL;
         }
+#else
+        handle = hisvg_handle_new_from_data(data, data_len, error);
+#endif
         g_free (data);
     }
 
