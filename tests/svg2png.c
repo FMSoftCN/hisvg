@@ -74,7 +74,14 @@ int MiniGUIMain (int argc, const char* argv[])
 
     HiSVGDimensionData dimensions;
     GError *error = NULL;
-    HiSVGHandle* svg = hisvg_handle_new_from_file (argv[1], &error);
+
+    char file_buf[1024] = {0};
+    FILE* fp = fopen(argv[1], "r");
+    fread(file_buf, 1024, 1, fp);
+    fclose(fp);
+    HiSVGHandle* svg = hisvg_handle_new_from_data (file_buf, strlen(file_buf), &error);
+
+    //HiSVGHandle* svg = hisvg_handle_new_from_file (argv[1], &error);
 
     char id[100] = "#pp";
     HLDomElementNode* element = hisvg_handle_get_node(svg, id);
