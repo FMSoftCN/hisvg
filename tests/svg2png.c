@@ -57,6 +57,7 @@
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
 #include <minigui/window.h>
+#include <unistd.h>
 
 
 int MiniGUIMain (int argc, const char* argv[])
@@ -109,10 +110,16 @@ int MiniGUIMain (int argc, const char* argv[])
 //    hisvg_handle_render_cairo (svg, cr, NULL,  NULL, NULL);
     cairo_surface_write_to_png (surface, png_name);
 
+    while(1)
+    {
+        sleep(5);
+    }
+
     cairo_surface_destroy (surface);
     cairo_destroy (cr);
     free(png_name);
 
     hisvg_handle_destroy(svg);
+
     return 0;
 }
