@@ -1148,6 +1148,7 @@ hisvg_handle_get_base_uri (HiSVGHandle * handle)
  *
  * Returns: The error domain
  */
+#if 0
 GQuark
 hisvg_error_quark (void)
 {
@@ -1155,6 +1156,7 @@ hisvg_error_quark (void)
        that's ultimately unloaded */
     return g_quark_from_string ("hisvg-error-quark");
 }
+#endif
 
 static void
 hisvg_set_error (GError **error, xmlParserCtxtPtr ctxt)
@@ -1162,6 +1164,7 @@ hisvg_set_error (GError **error, xmlParserCtxtPtr ctxt)
     xmlErrorPtr xerr;
 
     xerr = xmlCtxtGetLastError (ctxt);
+#if 0
     if (xerr) {
         g_set_error (error, hisvg_error_quark (), 0,
                      _("Error domain %d code %d on line %d column %d of %s: %s"),
@@ -1172,6 +1175,7 @@ hisvg_set_error (GError **error, xmlParserCtxtPtr ctxt)
     } else {
         g_set_error (error, hisvg_error_quark (), 0, _("Error parsing XML data"));
     }
+#endif
 }
 
 static gboolean
@@ -2114,7 +2118,9 @@ _hisvg_pop_view_box (HiSVGDrawingCtx * ctx)
 void
 hisvg_return_if_fail_warning (const char *pretty_function, const char *expression, GError ** error)
 {
+#if 0
     g_set_error (error, HISVG_ERROR, 0, _("%s: assertion `%s' failed"), pretty_function, expression);
+#endif
 }
 
 static gboolean

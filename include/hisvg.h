@@ -93,8 +93,10 @@ extern "C" {
 #endif
 
 
+#if 0
 #define HISVG_ERROR (hisvg_error_quark ())
 GQuark hisvg_error_quark (void) G_GNUC_CONST;
+#endif
 
 HiSVGHandle* hisvg_handle_new (HiSVGHandleFlags flags);
 void hisvg_handle_destroy (HiSVGHandle* handle);
